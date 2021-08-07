@@ -9,7 +9,7 @@
         "$types/*": ["types/*"],
         "@utils/*": ["utils/*"],
         "@pages/*": ["pages/*"],
-        "@services/*": ["@services/*"]
+        "@services/*": ["services/*"]
      }
   }
 }
