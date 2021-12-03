@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+export const Main = styled.main`
+  display: flex;
+`;
+
 export const VacanciesBlock = styled.div`
   max-width: 460px;
   position: relative;
@@ -12,6 +16,7 @@ export const VacancyItem = styled.div`
   padding: 20px;
   display: flex;
   margin-bottom: 15px;
+  cursor: pointer;
 `;
 
 export const ItemContentBlock = styled.div`
@@ -42,4 +47,11 @@ export const ItemTitle = styled.h2`
   line-height: 17px
   color: ${props => props.theme.black};
   margin: 5px 0 5px;
+`;
+
+export const EmptyLogo = styled.div`
+  background: #f7f8f9;
+  border-radius: 10px;
+  width: 68px;
+  height: 49px;
 `;

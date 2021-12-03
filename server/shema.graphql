@@ -1,8 +1,0 @@
-type City {
-  name: String
-  id: ID
-}
-
-type Query {
-  city: []
-}

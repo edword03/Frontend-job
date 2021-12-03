@@ -3,7 +3,8 @@ import { Header, Container } from '@components/index';
 import styled, { ThemeContext } from 'styled-components';
 import { GlobalStyle, Theme } from '@styles/style.d';
 import { FeaturedJobs, SearchJobs } from '@pages/index';
-import { getCity } from '@services/api'
+import { getVacancies } from '@services/api'
+import { useQuery, gql } from '@apollo/client';
 
 
 type CurrenPageType = 'searchPage' | 'featuredPage';
@@ -14,26 +15,25 @@ interface ICity {
   id: number;
 }
 
-
+const JOB_INFO = gql`
+  query Job {
+    getFetch {
+      items {
+        name
+      }
+    }
+  }
+`
 
 export const App = () => {
   const [currentPage, setCurrenPage] = React.useState<CurrenPageType>('searchPage');
-  const [data, setData] = React.useState({});
+  // const [data, setData] = React.useState({});
+  const { loading, error, data } = useQuery(JOB_INFO)
 
-  const setCites = (name: string, id: number) => {
-    const obj: ICity = {
-      name,
-      id,
-    };
-    setData(() => obj);
-  };
+  // console.log(loading, error, data);
 
-  // React.useEffect(() => {
-  //   setData(getCity().then(data => console.log(data)))
-  //   fetch('https://api.hh.ru/vacancies/')
-  // }, [])
-  
-  console.log(data);
+  // data.getFetch.items.map((item: any) => console.log(item))
+
   const toggleSearchPage = () => {
     setCurrenPage('searchPage');
   };

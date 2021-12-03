@@ -2,71 +2,73 @@ import React from 'react';
 import { Container } from '@components/UI/Container';
 import { VacanciesBlock } from './Main.styles';
 import { VacancyItemComponent } from './VacancyItem';
+import { Iitem } from '$types/type';
+import { getVacancies } from '@services/api';
+import { Details } from '@components/Details/Details';
+import { Main as MainBlock } from './Main.styles';
+import { useQuery, gql } from '@apollo/client';
 
-import Job1 from '@assets/img/job-1.png';
-import Job2 from '@assets/img/job-2.png';
-import Job3 from '@assets/img/job-3.png';
-import Job4 from '@assets/img/job-4.png';
 
-const jobList = [
-  {
-    title: 'Front-end Разработчиĸ',
-    company: 'Интернет Люди',
-    city: 'Москва',
-    logo: Job1,
-  },
-  {
-    title: 'React Developer (Middle/Senior)',
-    company: 'GOOD CALL DEVELOPMENT',
-    city: 'Москва',
-    logo: Job2,
-  },
-  {
-    title: 'Frontend developer (React)',
-    company: 'Winfinity',
-    city: 'Москва',
-    logo: Job3,
-  },
-  {
-    title: 'Frontend developer',
-    company: 'Diagnocat',
-    city: 'Москва',
-    logo: Job4,
-  },
-];
-
-interface IFetch {}
+const JOB_ITEMS = gql`
+  query Job {
+    getVacancies {
+      items {
+        name
+        employer {
+          logo_urls {
+            _240
+            _90
+            original
+          }
+          name
+        }
+        address {
+          city
+        }
+        id
+      }
+    }
+  }
+`
 
 export const Main = () => {
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
-    async function getVacancies() {
-      const res = await fetch('https://api.hh.ru/vacancies?text=Frontend');
-      const data = await res.json();
-      setData(data.items);
-    }
+  // const [data, setData] = React.useState<Array<Iitem>>([]);
+  const {loading, error, data} = useQuery(JOB_ITEMS)
+  console.log(data)
+  // React.useEffect(() => {
+  //   async function setDataFetch() {
+  //     const res = await getVacancies();
+  //     console.log(res);
+  //     setData(res.items);
+  //   }
+  //   setDataFetch();
+  // }, []);
 
-    // getVacancies();
-  }, []);
-  console.log(data);
-  return (
+
+  if (loading) return <p>Загрузка...</p>
+  if (error) return <p>Что то пошло не так...</p>
+
+  return ( 
     <>
-      <VacanciesBlock>
-        d
-        {data ? (
-          data.map((item: any) => (
-            <VacancyItemComponent
-              key={Math.random() * 2525}
-              title={item.name}
-              logo={item.employer.logo_urls ? item.employer.logo_urls.original : ''}
-              company={item.employer.name} 
-              city={item.address ? item.address.city: ''}
-            />
-          ))
-        ) : (
-          <p>Вакансии не найдены</p>
-        )}
-      </VacanciesBlock>
+      <MainBlock>
+        <VacanciesBlock id="vacancyClick"> 
+          {data.getVacancies.items ? (
+            data.getVacancies.items.map((item: any) => ( 
+              <VacancyItemComponent
+                key={Math.random() * 2525}
+                title={item.name}
+                logo={item.employer.logo_urls ? (item.employer.logo_urls.original || item.employer.logo_urls['90'] || item.employer.logo_urls['240']) : ''}
+                company={item.employer.name}
+                city={item.address ? item.address.city : ''}
+                id={item.id}
+              />
+            ))
+          ) : (
+            <p>Вакансии не найдены</p>
+          )}
+        </VacanciesBlock>
+        <div id="root-portal"> </div>
+      </MainBlock>
     </>
   );
 };
