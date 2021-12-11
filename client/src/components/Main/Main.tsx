@@ -6,59 +6,35 @@ import { Iitem } from '$types/type';
 import { getVacancies } from '@services/api';
 import { Details } from '@components/Details/Details';
 import { Main as MainBlock } from './Main.styles';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, DocumentNode } from '@apollo/client';
+import { IS_DETAIL_ID } from '../../schemas';
+
+interface IProps {
+  jobs: any
+  schema: DocumentNode
+  isVacancies: boolean
+}
+
+export const Main: React.FC<IProps> = ({jobs, schema, isVacancies}) => {
+  const { loading, error } = useQuery(schema);
+  const {data} = useQuery(IS_DETAIL_ID) 
+  console.log('data: ', data);
+
+  const isVisible = data && data.isVisible
+
+  if (loading) return <p>Загрузка...</p>;
+  if (error) return <p>Что то пошло не так...</p>;
 
 
-const JOB_ITEMS = gql`
-  query Job {
-    getVacancies {
-      items {
-        name
-        employer {
-          logo_urls {
-            _240
-            _90
-            original
-          }
-          name
-        }
-        address {
-          city
-        }
-        id
-      }
-    }
-  }
-`
-
-export const Main = () => {
-  // const [data, setData] = React.useState<Array<Iitem>>([]);
-  const {loading, error, data} = useQuery(JOB_ITEMS)
-  console.log(data)
-  // React.useEffect(() => {
-  //   async function setDataFetch() {
-  //     const res = await getVacancies();
-  //     console.log(res);
-  //     setData(res.items);
-  //   }
-  //   setDataFetch();
-  // }, []);
-
-
-  if (loading) return <p>Загрузка...</p>
-  if (error) return <p>Что то пошло не так...</p>
-
-  return ( 
+  return (
     <>
       <MainBlock>
-        <VacanciesBlock id="vacancyClick"> 
-          {data.getVacancies.items ? (
-            data.getVacancies.items.map((item: any) => ( 
+        <VacanciesBlock>
+          {isVacancies ? (
+            jobs.map((item: any) => (
               <VacancyItemComponent
                 key={Math.random() * 2525}
-                title={item.name}
-                logo={item.employer.logo_urls ? (item.employer.logo_urls.original || item.employer.logo_urls['90'] || item.employer.logo_urls['240']) : ''}
-                company={item.employer.name}
+                title={item.name} 
                 city={item.address ? item.address.city : ''}
                 id={item.id}
               />
@@ -67,7 +43,8 @@ export const Main = () => {
             <p>Вакансии не найдены</p>
           )}
         </VacanciesBlock>
-        <div id="root-portal"> </div>
+        <div id="root-portal"></div>
+        {isVisible && <Details />}
       </MainBlock>
     </>
   );

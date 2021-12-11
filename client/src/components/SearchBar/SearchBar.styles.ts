@@ -63,4 +63,43 @@ export const DropDown = styled.div`
   top: 100%;
   width: 100%;
   height: 100px;
+
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    + label {
+      &:before {
+        content: '';
+        background: #f4f4f4;
+        border-radius: 100%;
+        border: 1px solid darken(#f4f4f4, 25%);
+        display: inline-block;
+        width: 1.4em;
+        height: 1.4em;
+        position: relative;
+        top: -0.2em;
+        margin-right: 1em; 
+        vertical-align: top;
+        cursor: pointer;
+        text-align: center;
+        transition: all 250ms ease;
+      }
+    }
+    &:checked {
+      + label {
+        &:before {
+          background-color: #3197EE;
+          box-shadow: inset 0 0 0 4px #f4f4f4;
+        }
+      }
+    }
+    &:focus {
+      + label {
+        &:before {
+          outline: none;
+          border-color: #3197EE;
+        }
+      }
+    }
+  }
 `;

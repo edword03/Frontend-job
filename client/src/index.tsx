@@ -1,34 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from '@components/App';
-import { ApolloClient, gql, InMemoryCache, ApolloProvider, useQuery } from '@apollo/client';
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { ApolloClient, gql, ApolloProvider } from '@apollo/client';
+import { cache } from './cache';
 
 
-// const link = new WebSocketLink({
-//   uri: 'ws://localhost:4000/graphql',
-//   options: {
-//     reconnect: true
-//   }
-// })
+export const typeDefs = gql`
+  type VacancyItem {
+    title: String
+    description: String
+  }
+
+  extend type Query {
+    isVisible: Boolean!
+    vacancyId: ID!
+    currentVacancy: VacancyItem
+  }
+`;
+
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache(),
-})
+  cache,
+  typeDefs
+});
 
-
-client.query({
-  query: gql` 
-    query Job {
-      getVacancies {
-        items {
-          name
-        }
-      }
-    }
-  `
-}).then(result => console.log(result))
 
 ReactDOM.render(
   <ApolloProvider client={client}>

@@ -1,27 +1,12 @@
-import fetch from 'node-fetch'
-
-export const getFetch = async(request) => {
-  console.log(request);
-  const url = new URL(`https://api.hh.ru/vacancies?text=frontend&area=${request ? request.city : '1'}`)
-
-  // url.searchParams.append('area', '')
-  console.log(url);
-  
-  const response = await fetch(url)
-  if (response.ok) {
-    const data = await response.json()
-    return data
-  }
-
-  throw new Error(response.status)
-}
-
-
+import fetch from 'node-fetch';
 
 export const resolvers = {
   Query: {
-    getVacancies: () => {
-      return getFetch()
+    vacancies: async (root, {city}, { dataSources }) => {
+      return dataSources.api.getVacancies(city);
+    },
+    vacancyItem: async(_, {id}, {dataSources}) => {
+      return dataSources.api.getVacancyItem(id)
     }
-  }
-}
+  },
+};

@@ -1,32 +1,26 @@
-import exrpess from 'express'
-import { typeDefs } from './schema'
-import {createServer} from 'http'
-import { resolvers, getFetch } from './resolvers'
-const { graphqlHTTP } = require('express-graphql');
+import express from 'express'
+import typeDefs from './schema/index.js'
+import { resolvers } from './resolvers/index.js'
+import cors from 'cors'
 
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const urlUncode = bodyParser.urlencoded({ extended: false })
-import { ApolloServer, gql } from 'apollo-server-express'
-
+import { ApolloServer } from 'apollo-server-express'
+import { Vacancies } from './api/Vacancies.js'
 
 const startServer = async () => {
   const server = new ApolloServer({
     typeDefs: typeDefs,
-    resolvers
+    resolvers,
+    dataSources: () => {
+      return {
+        api: new Vacancies()
+      }
+    }
   });
 
   await server.start();
 
-  const app = exrpess();
-
-  app.use(bodyParser.json())
+  const app = express();
   app.use(cors())
-
-  app.post('/', urlUncode, (req, res) => {
-    console.log(req.query);
-    getFetch(req.body)
-  })
 
   server.applyMiddleware({ app });
 

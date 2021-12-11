@@ -1,9 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export const typeDefs = gql`
-  type Subscription  {
-    update: JobsRes
-  }
+const typeDefs = gql`
 
   type JobsRes {
     id: ID
@@ -27,6 +24,37 @@ export const typeDefs = gql`
     salary: Salary
     schedule: Schedule
     snippet: Snippet
+  }
+
+  type KeySkills {
+    name: String
+  }
+
+  type BillingType {
+    id: String
+    name: String
+  }
+
+  type VacancyItem {
+    id: ID
+    premium: Boolean
+    billing_type: BillingType
+    name: String
+    area: Area
+    salary: Salary
+    address: Address
+    experience: Experience
+    schedule: Schedule
+    employment: Employment
+    description: String
+    key_skills: [KeySkills]
+    employer: Employer
+    created_at: String
+  }
+
+  type Employment {
+    id: String
+    name: String
   }
 
   type Snippet {
@@ -62,6 +90,11 @@ export const typeDefs = gql`
     original: String
   }
 
+  type Experience {
+    id: String
+    name: String
+  }
+
   type Address {
     building: String
     city: String
@@ -85,6 +118,9 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getVacancies: JobsRes
+    vacancies(city: String): JobsRes
+    vacancyItem(id: ID):VacancyItem
   }
 `;
+
+export default typeDefs

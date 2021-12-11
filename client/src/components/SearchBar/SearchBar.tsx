@@ -3,56 +3,52 @@ import { SearchBarWrap, Input, DropDown, InputContainer } from './SearchBar.styl
 import Location from '@assets/img/svg/Location.svg';
 import LocationIcon from '@assets/img/svg/Location.svg';
 import TimeIcon from '@assets/img/svg/Time-icon.svg';
+import {queryParamsVar} from '../../cache'
 
-export const SearchBar = () => {
+interface IProps {
+  refetch: () => void;
+  setCityVariable: (id: string) => void;
+}
+
+export const SearchBar: React.FC<IProps> = ({ refetch, setCityVariable }) => {
   const [isVisivleDropdown, setIsVisivleDropdown] = React.useState<true | false>(false);
-  const [input, setInput] = React.useState('')
-  const [cityId, setCityId] = React.useState('1')
+  const [input, setInput] = React.useState('');
+  const [cityId, setCityId] = React.useState('1');
 
   const showDropDown = () => {
-    setIsVisivleDropdown(true);
+    setIsVisivleDropdown(prev => !prev);
   };
 
-  const searchCity = React.useCallback(async() => {
-    const request = await fetch(`https://api.hh.ru/suggests/areas?text=${input || 'Москва'}`)
+  const searchCity = React.useCallback(async () => {
+    const request = await fetch(`https://api.hh.ru/suggests/areas?text=${input || 'Москва'}`);
 
     if (!request.status) {
-      throw new Error('Error to fetching')
+      throw new Error('Error to fetching');
     }
-    const data = await request.json()
+    const data = await request.json();
     console.log(data);
 
-    return data
-  }, [input])
+    return data;
+  }, [input]);
 
   console.log();
- 
+
   React.useEffect(() => {
-    async function setCity(){
-      const data = await searchCity()
+    async function setCity() {
+      const data = await searchCity();
 
-      data.items ? setCityId(data.items[0].id) : setCityId('1') 
+      data.items ? setCityId(data.items[0].id) : setCityId('1');
     }
-    setCity()
-  }, [searchCity])
+    setCity();
+  }, [searchCity]);
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const body = {city: cityId}
- 
-    fetch('http://localhost:4000', {
-      method: 'POST',
-      // mode: 'no-cors',
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body),
-      // credentials: "same-origin",
-    })
-    .then(res => console.log(res))
-
-  }
-
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const body = { city: cityId };
+    setCityVariable(cityId);
+    queryParamsVar(body)
+    await refetch();
+  };
 
   return (
     <SearchBarWrap onSubmit={onSubmit}>
@@ -64,23 +60,26 @@ export const SearchBar = () => {
         <img src={TimeIcon} alt="" />
         <span>Гибкий график</span>
         {isVisivleDropdown && (
-          <DropDown>
-            <ul>
-              <li>
-                <label htmlFor="full-time">
-                  <input id="full-time" type="radio" />
-                </label>
+          <DropDown onClick={(e) => {
+           
+            e.stopPropagation()
+          }}>
+            <div>
+              <input id="full-time" name='radio' type="radio" checked />
+              <label htmlFor="full-time">
                 <span>Полный день</span>
-              </li>
-              <li>
-                <input type="radio" />
-                <span>Полный день</span>
-              </li>
-              <li>
-                <input type="radio" />
-                <span>Полный день</span>
-              </li>
-            </ul>
+              </label>
+            </div>
+            <div>
+              <input id="partTime" name='radio' type="radio" />
+              <label htmlFor="partTime">
+                <span>Частичная занятость</span>
+              </label>
+            </div>
+            <div>
+              <input type="radio" />
+              <span>Полный день</span>
+            </div>
           </DropDown>
         )}
       </InputContainer>
