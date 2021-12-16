@@ -7,6 +7,7 @@ const typeDefs = gql`
     alternate_url: String
     found: Int
     items: [VacanciesItem]
+    pages: String
   }
 
   type VacanciesItem {
@@ -117,9 +118,21 @@ const typeDefs = gql`
     city: ID
   }
 
+  type CityItems {
+    id: ID
+    text: String
+    url: String
+  }
+
+  type CityResponse {
+    items: [CityItems]
+  }
+
+ 
   type Query {
-    vacancies(city: String): JobsRes
+    vacancies(city: String, page: String): JobsRes
     vacancyItem(id: ID):VacancyItem
+    cityId(city: String): CityResponse
   }
 `;
 

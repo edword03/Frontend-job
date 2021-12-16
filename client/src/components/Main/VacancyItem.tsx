@@ -15,17 +15,15 @@ import {
 import { LikeIcon } from '@components/UI/LikeIcon';
 import { gql, useQuery } from '@apollo/client';
 import { favoriteVacanciesVar, isVisibleVar, vacancyIdVar } from '@cache/index';
+import { Loader } from '..';
 
 interface IItemProps {
-  title: string;
-  city: string;
   id: string;
 }
 
 const VACANCY_ITEM = gql`
   query Item($id: ID) {
     vacancyItem(id: $id) {
-      id
       name
       key_skills {
         name
@@ -38,6 +36,9 @@ const VACANCY_ITEM = gql`
           _240
         }
       }
+      address {
+        city
+      }
       created_at
     }
   }
@@ -49,8 +50,8 @@ const VACANCY_ID = gql`
   }
 `;
 
-export const VacancyItemComponent: React.FC<IItemProps> = ({ title, city, id }) => {
-  const { data } = useQuery(VACANCY_ITEM, {
+export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
+  const { data, loading } = useQuery(VACANCY_ITEM, {
     variables: { id },
   });
   const [isActive, setIsActive] = React.useState(false);
@@ -59,8 +60,17 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ title, city, id }) 
   const dateCreated = data && data.vacancyItem && data.vacancyItem.created_at;
   const formatDate = new Date(dateCreated).toLocaleDateString('en-GB');
 
-  const logo = data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.logo_urls && data.vacancyItem.employer.logo_urls.original
-  const companyName = data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name
+  const logo =
+    data &&
+    data.vacancyItem &&
+    data.vacancyItem.employer &&
+    data.vacancyItem.employer.logo_urls &&
+    data.vacancyItem.employer.logo_urls.original;
+  const companyName =
+    data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name;
+  const title = data && data.vacancyItem && data.vacancyItem.name;
+  const city =
+    data && data.vacancyItem && data.vacancyItem.address && data.vacancyItem.address.city;
 
   React.useEffect(() => {
     if (idItem.data.vacancyId === id) {
@@ -70,29 +80,36 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ title, city, id }) 
     }
 
     if (favoriteVacanciesVar().some(item => item.id === id)) {
-      setIsLiked(true)
+      setIsLiked(true);
     }
 
     return () => {
       setIsActive(false);
-    }
+    };
   }, [id, idItem.data.vacancyId]);
 
   const onDetailsInfo = () => {
     isVisibleVar(true);
     vacancyIdVar(id);
   };
+
   const onToggleLike = () => {
     setIsLiked(prevState => !prevState);
-    const newFavoriteVacancy = { title, city, logo, id };
-    const isFavorite = favoriteVacanciesVar().some(item => item.id === id)
+    const isFavorite = favoriteVacanciesVar().some(item => item.id === id);
 
     if (!isFavorite) {
-      favoriteVacanciesVar([newFavoriteVacancy, ...favoriteVacanciesVar()]);
+      favoriteVacanciesVar([{ id }, ...favoriteVacanciesVar()]);
     } else {
-      favoriteVacanciesVar([...favoriteVacanciesVar()].filter(item => item.id !== id))
+      favoriteVacanciesVar([...favoriteVacanciesVar()].filter(item => item.id !== id));
     }
   };
+
+  if (loading)
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <Loader />
+      </div>
+    );
 
   return (
     <>

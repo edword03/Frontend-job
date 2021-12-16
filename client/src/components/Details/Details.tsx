@@ -13,33 +13,9 @@ import {
   Delimetr,
 } from './Details.styles';
 import { Portal } from '@components/Portal';
+import { DETAILS_INFO } from '../../schemas';
+import { Loader } from '..';
 
-const VACANCY_ITEM = gql`
-  query Item($id: ID) {
-    vacancyItem(id: $id) {
-      id
-      name
-      description
-      salary {
-        currency
-        from
-        to
-        gross
-      }
-      employer {
-        name
-        logo_urls {
-          original
-          _90
-          _240
-        }
-      }
-      address {
-        city
-      }
-    }
-  }
-`;
 
 const GET_ID = gql`
   query Id {
@@ -50,7 +26,7 @@ const GET_ID = gql`
 export const Details = () => {
   console.log('details render');
   const details = useQuery(GET_ID);
-  const { loading, error, data } = useQuery(VACANCY_ITEM, {
+  const { loading, error, data } = useQuery(DETAILS_INFO, {
     variables: { id: details.data.vacancyId },
   });
   console.log(data);
@@ -76,11 +52,12 @@ export const Details = () => {
 
   const city =
     data && data.vacancyItem && data.vacancyItem.address && data.vacancyItem.address.city;
+  const companyTitle = data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name
 
   if (loading) {
     return (
       <Portal>
-        <h2>Загрузка</h2>
+        <Loader />
       </Portal>
     );
   }
@@ -98,7 +75,7 @@ export const Details = () => {
             <div style={{ marginRight: 'auto' }}>
               <DetailsTitle>{data && data.vacancyItem.name}</DetailsTitle>
               <DetailsSubtitleBlock>
-                <DetailsSubtitle>{data && data.vacancyItem.employer.name}</DetailsSubtitle>
+                <DetailsSubtitle>{companyTitle}</DetailsSubtitle>
                 {city && <Delimetr />}
                 <DetailsSubtitle>{city}</DetailsSubtitle>
               </DetailsSubtitleBlock>

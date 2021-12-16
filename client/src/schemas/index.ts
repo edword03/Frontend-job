@@ -1,4 +1,4 @@
-import {gql} from "@apollo/client"
+import { gql } from '@apollo/client';
 
 export const IS_DETAIL_ID = gql`
   query IsDetailsInfo {
@@ -7,8 +7,8 @@ export const IS_DETAIL_ID = gql`
 `;
 
 export const JOB_ITEMS = gql`
-  query Job($city: String) {
-    vacancies(city: $city) {
+  query Job($city: String, $page: String) {
+    vacancies(city: $city, page: $page) {
       items {
         name
         employer {
@@ -23,6 +23,34 @@ export const JOB_ITEMS = gql`
           city
         }
         id
+      }
+      pages
+    }
+  }
+`;
+
+export const DETAILS_INFO = gql`
+  query Item($id: ID) {
+    vacancyItem(id: $id) {
+      id
+      name
+      description
+      salary {
+        currency
+        from
+        to
+        gross
+      }
+      employer {
+        name
+        logo_urls {
+          original
+          _90
+          _240
+        }
+      }
+      address {
+        city
       }
     }
   }
