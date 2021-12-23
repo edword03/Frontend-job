@@ -8,29 +8,35 @@ import { queryParamsVar } from '@cache/index';
 export const SearchJobs = () => {
   const [page, setPage] = React.useState(0);
   const query = useReactiveVar(queryParamsVar);
+  console.log('query: ', query);
   const { data, refetch } = useQuery(JOB_ITEMS, {
     notifyOnNetworkStatusChange: true,
-    variables: { city: query.city, page: page.toLocaleString() },
+    variables: {
+      city: query.city,
+      schedule: query.schedule,
+      employment: query.employment,
+      experience: query.experience,
+      salary: query.salary,
+      page: page.toLocaleString(),
+      currency: query.currency
+    },
   });
 
-  const isVacancies = React.useMemo(
-    () => data && data.vacancies && data.vacancies.items.length > 0,
-    [data],
-  );
+  const isVacancies = data && data.vacancies && data.vacancies.items.length > 0;
 
+  const jobs = data && data.vacancies && data.vacancies.items;
 
-  const jobs = React.useMemo(() => data && data.vacancies && data.vacancies.items, [data]);
-
-  const increaseCurrentPage = () => {
+  const increaseCurrentPage = React.useCallback(() => {
     if (page < 100) {
       setPage(prevState => prevState + 1);
     }
-  };
-  const decreaseCurrentPage = () => {
+  }, [page]);
+
+  const decreaseCurrentPage = React.useCallback(() => {
     if (page > 0) {
       setPage(prevState => prevState - 1);
     }
-  };
+  }, [page]);
 
   console.log(data);
   return (

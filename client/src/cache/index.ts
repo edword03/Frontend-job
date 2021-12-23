@@ -1,12 +1,17 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 
 interface IQueryType {
-  city?: string
+  city?: string;
+  schedule?: string;
+  employment?: string;
+  experience?: string;
+  salary?: string;
+  currency?: string
 }
 
 export const isVisibleVar = makeVar<boolean>(false);
 export const vacancyIdVar = makeVar<string>('');
-export const favoriteVacanciesVar = makeVar<Array<{id: string}>>([]);
+export const favoriteVacanciesVar = makeVar<Array<{ id: string }>>([]);
 export const queryParamsVar = makeVar<IQueryType>({});
 
 export const cache: InMemoryCache = new InMemoryCache({

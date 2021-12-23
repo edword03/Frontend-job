@@ -27,15 +27,12 @@ export const Main: React.FC<IProps> = ({
 }) => {
   const { loading, error } = useQuery(schema);
   const { data } = useQuery(IS_DETAIL_ID);
-  console.log('data: ', data);
 
   const isVisible = data && data.isVisible;
 
   React.useEffect(() => {
-    console.log(loading);
     if(isVacancies && !loading) {
       vacancyIdVar(jobs[0].id);
-      console.log(vacancyIdVar());
       isVisibleVar(true)
     }
     return () => {

@@ -84,3 +84,10 @@ export const DetailsDescription = styled.div`
     margin-bottom: 5px;
   }
 `;
+
+export const Experience = styled.span`
+  color: #9aaab5;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+`

@@ -11,11 +11,11 @@ import {
   DetailsSubtitle,
   DetailsSubtitleBlock,
   Delimetr,
+  Experience,
 } from './Details.styles';
 import { Portal } from '@components/Portal';
 import { DETAILS_INFO } from '../../schemas';
 import { Loader } from '..';
-
 
 const GET_ID = gql`
   query Id {
@@ -29,7 +29,6 @@ export const Details = () => {
   const { loading, error, data } = useQuery(DETAILS_INFO, {
     variables: { id: details.data.vacancyId },
   });
-  console.log(data);
 
   const salaryFrom = data && data.vacancyItem && data.vacancyItem.salary?.from;
   const salaryTo = data && data.vacancyItem && data.vacancyItem.salary?.to;
@@ -52,7 +51,8 @@ export const Details = () => {
 
   const city =
     data && data.vacancyItem && data.vacancyItem.address && data.vacancyItem.address.city;
-  const companyTitle = data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name
+  const companyTitle =
+    data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name;
 
   if (loading) {
     return (
@@ -81,6 +81,13 @@ export const Details = () => {
               </DetailsSubtitleBlock>
             </div>
           </DetailsHeader>
+          <Experience>
+            Требуемый опыт работы:{' '}
+            {data &&
+              data.vacancyItem &&
+              data.vacancyItem.experience &&
+              data.vacancyItem.experience.name}
+          </Experience>
           <DetailsSalary>{totalSalary}</DetailsSalary>
         </DetailsHead>
         <DetailsDescription

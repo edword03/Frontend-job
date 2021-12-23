@@ -25,7 +25,9 @@ const typeDefs = gql`
     salary: Salary
     schedule: Schedule
     snippet: Snippet
+    experience: Experience
   }
+
 
   type KeySkills {
     name: String
@@ -130,7 +132,7 @@ const typeDefs = gql`
 
  
   type Query {
-    vacancies(city: String, page: String): JobsRes
+    vacancies(city: String, page: String, schedule: String, employment: String, experience: String, salary: String, currency: String): JobsRes
     vacancyItem(id: ID):VacancyItem
     cityId(city: String): CityResponse
   }

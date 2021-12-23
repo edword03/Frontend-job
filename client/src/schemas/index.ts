@@ -7,8 +7,8 @@ export const IS_DETAIL_ID = gql`
 `;
 
 export const JOB_ITEMS = gql`
-  query Job($city: String, $page: String) {
-    vacancies(city: $city, page: $page) {
+  query Job($city: String, $page: String, $schedule: String, $employment: String, $experience: String, $salary: String, $currency: String) {
+    vacancies(city: $city, page: $page, schedule: $schedule, employment: $employment, experience: $experience, salary: $salary, currency: $currency) {
       items {
         name
         employer {
@@ -23,6 +23,9 @@ export const JOB_ITEMS = gql`
           city
         }
         id
+        experience {
+          name
+        }
       }
       pages
     }
@@ -48,6 +51,9 @@ export const DETAILS_INFO = gql`
           _90
           _240
         }
+      }
+      experience {
+        name
       }
       address {
         city
