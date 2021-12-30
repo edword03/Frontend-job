@@ -1,10 +1,13 @@
 import express from 'express'
-import typeDefs from './schema/index.js'
-import { resolvers } from './resolvers/index.js'
+import path from 'path'
+import typeDefs from './src/schema/index.js'
+import { resolvers } from './src/resolvers/index.js'
 import cors from 'cors'
 
 import { ApolloServer } from 'apollo-server-express'
-import { Vacancies } from './api/Vacancies.js'
+import { Vacancies } from './src/api/Vacancies.js'
+
+const PORT = process.env.PORT || 5000
 
 const startServer = async () => {
   const server = new ApolloServer({
@@ -18,14 +21,14 @@ const startServer = async () => {
   });
 
   await server.start();
-
   const app = express();
   app.use(cors())
+  app.use(express.static('client/build'))
 
   server.applyMiddleware({ app });
 
-  await new Promise(resolve => app.listen({ port: 4000 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  await new Promise(resolve => app.listen({ port: PORT }, resolve));
+  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
   return { server, app };
 };
 

@@ -9,9 +9,4 @@ export const OptionItem = styled.li`
     display: flex;
     align-items: center;
   }
-
-  & label:hover {
-    background-color: ${props => props.theme.secondary};
-    color: ${props => props.theme.white};
-  }
 `;

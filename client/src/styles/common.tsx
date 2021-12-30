@@ -22,6 +22,12 @@ export const InputContainer = styled.div`
     position: absolute;
     right: 0;
   }
+
+  &:hover {
+    background-color: #eff6ff;
+    
+    transition: .5s;
+  }
 `;
 
 export const DropDown = styled.ul`

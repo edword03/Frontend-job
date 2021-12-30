@@ -4,6 +4,7 @@ import { App } from '@components/App';
 import { ApolloClient, gql, ApolloProvider } from '@apollo/client';
 import { cache } from './cache';
 
+const PORT = process.env.PORT || 5000
 
 export const typeDefs = gql`
   type VacancyItem {
@@ -20,7 +21,7 @@ export const typeDefs = gql`
 
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: `http://localhost:${PORT}/graphql`,
   cache,
   typeDefs
 });
