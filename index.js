@@ -1,6 +1,7 @@
 import express from 'express'
 import typeDefs from './src/schema/index.js'
-import path from 'path'
+import path, {dirname} from 'path'
+import { fileURLToPath } from 'url';
 import { resolvers } from './src/resolvers/index.js'
 import cors from 'cors'
 
@@ -23,10 +24,12 @@ const startServer = async () => {
   await server.start();
   const app = express();
 
-  const buildPath = path.join(import.meta.url, '..', 'client/build')
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
 
   app.use(cors())
-  app.use(express.static(buildPath))
+  app.use(express.static(__dirname + '/client/build'))
+
 
   server.applyMiddleware({ app });
 
