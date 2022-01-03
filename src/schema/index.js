@@ -1,7 +1,6 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
-
   type JobsRes {
     id: ID
     alternate_url: String
@@ -27,7 +26,6 @@ const typeDefs = gql`
     snippet: Snippet
     experience: Experience
   }
-
 
   type KeySkills {
     name: String
@@ -130,12 +128,19 @@ const typeDefs = gql`
     items: [CityItems]
   }
 
- 
   type Query {
-    vacancies(city: String, page: String, schedule: String, employment: String, experience: String, salary: String, currency: String): JobsRes
-    vacancyItem(id: ID):VacancyItem
+    vacancies(
+      city: String
+      page: String
+      schedule: String
+      employment: String
+      experience: String
+      salary: String
+      currency: String
+    ): JobsRes
+    vacancyItem(id: ID): VacancyItem
     cityId(city: String): CityResponse
   }
 `;
 
-export default typeDefs
+export default typeDefs;
