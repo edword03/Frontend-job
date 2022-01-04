@@ -4,8 +4,6 @@ import { App } from '@components/App';
 import { ApolloClient, gql, ApolloProvider } from '@apollo/client';
 import { cache } from './cache';
 
-const PORT = process.env.PORT || 5000
-
 export const typeDefs = gql`
   type VacancyItem {
     title: String
@@ -21,7 +19,7 @@ export const typeDefs = gql`
 
 
 const client = new ApolloClient({
-  uri: `http://localhost:${PORT}/graphql`,
+  uri: process.env.REACT_APP_GRAPHQL_URL,
   cache,
   typeDefs
 });
