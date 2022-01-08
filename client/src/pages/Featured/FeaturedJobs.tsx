@@ -7,7 +7,6 @@ import { JOB_ITEMS } from '../../schemas';
 export const FeaturedJobs = () => {
   const favoriteVacancies = useReactiveVar(favoriteVacanciesVar)
 
-
   return (
     <>
       <h1 style={{ marginTop: '140px' }}> </h1>
