@@ -1,5 +1,4 @@
 import React from "react";
-import { useMediaQuery } from "react-responsive";
 import { PaginationItem, PaginationItems, VacanciesBlock } from "./Main.styles";
 import { Loader } from "@components/index";
 import { VacancyItemComponent } from "./VacancyItem";
@@ -8,6 +7,7 @@ import { Main as MainBlock } from "./Main.styles";
 import { useQuery, DocumentNode } from "@apollo/client";
 import { IS_DETAIL_ID } from "../../schemas";
 import { vacancyIdVar, isVisibleVar } from "@cache/index";
+import { useMedia } from "../../hooks/useMedia";
 
 interface IProps {
   jobs: Array<{ id: string }>;
@@ -28,7 +28,7 @@ export const Main: React.FC<IProps> = ({
 }) => {
   const { loading, error } = useQuery(schema);
   const { data } = useQuery(IS_DETAIL_ID);
-  const isMobile = useMediaQuery({ query: "(max-width: 900px)" });
+  const { isDesktop } = useMedia();
 
   const isVisible = data && data.isVisible;
 
@@ -38,14 +38,14 @@ export const Main: React.FC<IProps> = ({
       isVisibleVar(true);
     }
 
-    if (isMobile) {
+    if (!isDesktop) {
       vacancyIdVar("");
       isVisibleVar(false);
     }
     return () => {
       isVisibleVar(false);
     };
-  }, [loading, jobs, isVacancies, isMobile]);
+  }, [loading, jobs, isVacancies, isDesktop]);
 
   if (loading) return <Loader />;
   if (error) return <p>Что то пошло не так...</p>;

@@ -89,7 +89,9 @@ export const Currency = styled.select`
   border: none;
   color: #49627e;
   font-weight: bold;
-  width: 55px;
+  max-width: 55px;
+  width: 100%;
+  background: ${props => props.theme.white};
   appearance: none;
   cursor: pointer;
 

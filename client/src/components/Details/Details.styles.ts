@@ -8,6 +8,15 @@ export const DetailsBlock = styled.div`
   max-width: 660px;
   width: 100%;
   margin-left: 40px;
+
+  @media screen and (max-width: 1024px) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    top: -8px;
+    margin-left: 0;
+  }
 `;
 
 export const DetailsHead = styled.div`
@@ -20,12 +29,30 @@ export const HeadLogo = styled.img`
   max-width: 130px;
   height: auto;
   margin-right: 20px;
+
+  @media screen and (max-width: 600px) {
+    margin-bottom: 15px;
+  }
+`;
+
+export const LogoSection = styled.div`
+  @media screen and (max-width: 600px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
 `;
 
 export const DetailsHeader = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 30px;
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const DetailsTitle = styled.h2`
@@ -37,15 +64,19 @@ export const DetailsTitle = styled.h2`
 export const DetailsSubtitleBlock = styled.div`
   display: flex;
   margin-top: 8px;
-`
+
+  @media screen and (max-width: 600px) {
+    margin-top: 12px;
+  }
+`;
 
 export const Delimetr = styled.div`
-width: 12px;
-height: 1px;
-transform: rotate(90deg);
-margin: auto 15px auto;
-background-color: #9AAAB5;
-`
+  width: 12px;
+  height: 1px;
+  transform: rotate(90deg);
+  margin: auto 15px auto;
+  background-color: #9aaab5;
+`;
 
 export const DetailsSubtitle = styled.p`
   font-weight: bold;
@@ -90,4 +121,4 @@ export const Experience = styled.span`
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-`
+`;

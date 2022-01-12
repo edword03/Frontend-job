@@ -11,11 +11,13 @@ import {
   VacancyFlagActive,
   LikeIcon as LikeIconBlock,
   DateCreate,
+  LogoSection,
 } from './Main.styles';
 import { LikeIcon } from '@components/UI/LikeIcon';
 import { gql, useQuery } from '@apollo/client';
 import { favoriteVacanciesVar, isVisibleVar, vacancyIdVar } from '@cache/index';
 import { Loader } from '..';
+import { useMedia } from '@hooks/useMedia';
 
 interface IItemProps {
   id: string;
@@ -56,9 +58,12 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
   });
   const [isActive, setIsActive] = React.useState(false);
   const [isLiked, setIsLiked] = React.useState(false);
+
   const idItem = useQuery(VACANCY_ID);
   const dateCreated = data && data.vacancyItem && data.vacancyItem.created_at;
   const formatDate = new Date(dateCreated).toLocaleDateString('en-GB');
+
+  const { isMobile, isDesktop } = useMedia();
 
   const logo =
     data &&
@@ -106,7 +111,8 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
 
   if (loading)
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
         <Loader />
       </div>
     );
@@ -114,11 +120,16 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
   return (
     <>
       <VacancyItem id={`item-${id}`} onClick={onDetailsInfo}>
-        {isActive && <VacancyFlagActive />}
+        {isActive && isDesktop && <VacancyFlagActive />}
         <ItemContentBlock>
-          <div style={{ marginRight: '15px' }}>
+          <LogoSection>
             {logo ? <CompanyLogo src={logo} alt="logo" /> : <EmptyLogo />}
-          </div>
+            {isMobile && (
+              <div onClick={e => e.stopPropagation()}>
+                <LikeIcon isActive={isLiked} onToggle={onToggleLike} />
+              </div>
+            )}
+          </LogoSection>
           <div style={{ maxWidth: 290 }}>
             <ItemSubtitle>{companyName}</ItemSubtitle>
             <ItemTitle>{title}</ItemTitle>
@@ -131,12 +142,14 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
                 ))}
             </KeySkills>
           </div>
-          <LikeIconBlock onClick={e => e.stopPropagation()}>
-            <div>
-              <LikeIcon isActive={isLiked} onToggle={onToggleLike} />
-            </div>
-            <DateCreate>{formatDate}</DateCreate>
-          </LikeIconBlock>
+          {!isMobile && (
+            <LikeIconBlock onClick={e => e.stopPropagation()}>
+              <div>
+                <LikeIcon isActive={isLiked} onToggle={onToggleLike} />
+              </div>
+              <DateCreate>{formatDate}</DateCreate>
+            </LikeIconBlock>
+          )}
         </ItemContentBlock>
       </VacancyItem>
     </>

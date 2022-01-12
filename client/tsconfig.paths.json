@@ -10,7 +10,9 @@
         "@utils/*": ["utils/*"],
         "@pages/*": ["pages/*"],
         "@services/*": ["services/*"],
-        "@cache/*": ["cache/*"]
+        "@cache/*": ["cache/*"],
+        "@hooks/*": ["hooks/*"],
+        "@constants/*": ["constants/*"]
      }
   }
 }

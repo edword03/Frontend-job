@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DropDown, InputContainer } from '@styles/common';
-import { OptionItem } from './Dropdown.styles';
+import { OptionItem } from '../OptionItem';
 
 interface IPropsTypes {
-  imageSrc: string;
+  imageSrc?: string;
   options: Array<{ id: string; value: string }>;
   onChangeStateValue: (id: string) => void;
 }
@@ -44,19 +44,13 @@ export const Dropdown: React.FC<IPropsTypes> = ({ imageSrc, options, onChangeSta
         <DropDown onClick={e => e.stopPropagation()}>
           {options &&
             options.map(item => (
-              <OptionItem key={item.id}>
-                <input
-                  id={item.id}
-                  name="radio"
-                  type="radio"
-                  value={item.value}
-                  checked={item.value === titleSelect}
-                  onChange={onChangeRadio}
-                />
-                <label style={{ cursor: 'pointer' }} htmlFor={item.id}>
-                  <span>{item.value}</span>
-                </label>
-              </OptionItem>
+              <OptionItem
+                key={item.id}
+                id={item.id}
+                value={item.value}
+                title={titleSelect}
+                onChangeRadio={onChangeRadio}
+              />
             ))}
         </DropDown>
       )}

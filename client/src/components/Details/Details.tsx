@@ -12,10 +12,14 @@ import {
   DetailsSubtitleBlock,
   Delimetr,
   Experience,
+  LogoSection,
 } from './Details.styles';
 import { Portal } from '@components/Portal';
 import { DETAILS_INFO } from '../../schemas';
 import { Loader } from '..';
+import CloseIcon from '@assets/img/svg/close.svg';
+import { useMedia } from '@hooks/useMedia';
+import { isVisibleVar } from '@cache/index';
 
 const GET_ID = gql`
   query Id {
@@ -29,6 +33,8 @@ export const Details = () => {
   const { loading, error, data } = useQuery(DETAILS_INFO, {
     variables: { id: details.data.vacancyId },
   });
+
+  const { isMobile } = useMedia();
 
   const salaryFrom = data && data.vacancyItem && data.vacancyItem.salary?.from;
   const salaryTo = data && data.vacancyItem && data.vacancyItem.salary?.to;
@@ -54,10 +60,16 @@ export const Details = () => {
   const companyTitle =
     data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name;
 
+  const closeDetail = () => {
+    isVisibleVar(false);
+  };
+
   if (loading) {
     return (
       <Portal>
-        <Loader />
+        <DetailsBlock style={{width: '100%', height: '100%'}}>
+          <Loader />
+        </DetailsBlock>
       </Portal>
     );
   }
@@ -71,7 +83,10 @@ export const Details = () => {
       <DetailsBlock>
         <DetailsHead>
           <DetailsHeader>
-            {logoSrc && <HeadLogo src={logoSrc} />}
+            <LogoSection>
+              {logoSrc && <HeadLogo src={logoSrc} />}
+              {isMobile && <img src={CloseIcon} alt="close icon" onClick={closeDetail} />}
+            </LogoSection>
             <div style={{ marginRight: 'auto' }}>
               <DetailsTitle>{data && data.vacancyItem.name}</DetailsTitle>
               <DetailsSubtitleBlock>
@@ -82,7 +97,7 @@ export const Details = () => {
             </div>
           </DetailsHeader>
           <Experience>
-            Требуемый опыт работы:{' '}
+            Требуемый опыт работы:
             {data &&
               data.vacancyItem &&
               data.vacancyItem.experience &&
