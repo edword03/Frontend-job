@@ -40,11 +40,11 @@ export const Nav = styled.nav<NavProp>`
   display: flex;
   align-items: center;
 
-  justify-content: space-between;
+  justify-content: space-around;
   max-width: 380px;
   flex: 1;
 
-  @media screen and (max-width: 760px) {
+  @media screen and (max-width: 600px) {
     position: absolute;
     top: 100%;
     left: 0;
@@ -72,11 +72,7 @@ export const NavItem = styled.a<INavItem>`
 `;
 
 export const MobileMenu = styled.div`
-  display: none;
 
-  @media screen and (max-width: 760px) {
-    display: block;
-  }
 `;
 
 export const Hamburger = styled.div`

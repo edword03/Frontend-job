@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const InputContainer = styled.div`
+interface InputContainerProps {
+  border?: 'left' | 'right';
+}
+
+export const InputContainer = styled.div<InputContainerProps>`
   position: relative;
   display: flex;
   align-items: center;
@@ -8,25 +12,26 @@ export const InputContainer = styled.div`
   max-width: 250px;
   width: 100%;
   cursor: pointer;
+  justify-content: center;
 
   & img {
     padding-right: 20px;
   }
 
   &::after {
-    content: "";
-    display: block;
+    content: '';
+    display: ${props => props.border ? 'block' : 'none'};
     width: 2px;
     height: 100%;
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
     position: absolute;
-    right: 0;
+    ${props => (props.border ? { [props.border]: 0 } : '')};
   }
 
   &:hover {
     background-color: #eff6ff;
-    
-    transition: .5s;
+
+    transition: 0.5s;
   }
 `;
 

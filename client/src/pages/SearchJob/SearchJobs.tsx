@@ -38,7 +38,6 @@ export const SearchJobs = () => {
     }
   }, [page]);
 
-  console.log(data);
   return (
     <>
       <SearchBar refetch={refetch} />

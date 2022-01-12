@@ -14,7 +14,9 @@ module.exports = {
             "@utils": resolvePath('./src/utils'),
             '@pages': resolvePath('./src/pages'),
             "@services": resolvePath('./src/services'),
-            '@cache': resolvePath('./src/cache')
+            '@cache': resolvePath('./src/cache'),
+            "@hooks": resolvePath('./src/hooks'),
+            "@constants": resolvePath('./src/constants')
         }
     },
 }

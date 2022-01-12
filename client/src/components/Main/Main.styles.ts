@@ -2,11 +2,17 @@ import styled from 'styled-components';
 
 export const Main = styled.main`
   display: flex;
-  
+
+  @media screen and (max-width: 1024px) {
+    justify-content: center;
+    position: relative;
+  }
+
 `;
 
 export const VacanciesBlock = styled.div`
   max-width: 460px;
+  width: 100%;
   position: sticky;
   height: 100vh;
   overflow-y: scroll;
@@ -24,7 +30,7 @@ export const VacanciesBlock = styled.div`
   }
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
-}
+  }
 `;
 
 export const VacancyItem = styled.div`
@@ -39,9 +45,24 @@ export const VacancyItem = styled.div`
   position: relative;
 `;
 
+export const LogoSection = styled.div`
+  margin-right: 15px;
+
+  @media screen and (max-width: 600px) {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 0;
+    align-items: flex-start;
+  }
+`;
+
 export const ItemContentBlock = styled.div`
   display: flex;
   align-items: stretch;
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 export const CompanyLogo = styled.img`
@@ -117,7 +138,7 @@ export const PaginationItems = styled.div`
   align-items: center;
   justify-content: space-between;
   padding-bottom: 32px;
-`
+`;
 
 export const PaginationItem = styled.button`
   padding: 8px 12px;
@@ -128,6 +149,6 @@ export const PaginationItem = styled.button`
 
   &:active {
     background-color: #0070fb8c;
-    transition: .3s;
+    transition: 0.3s;
   }
-`
+`;
