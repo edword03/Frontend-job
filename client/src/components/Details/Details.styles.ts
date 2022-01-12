@@ -16,6 +16,7 @@ export const DetailsBlock = styled.div`
     width: 100%;
     top: -8px;
     margin-left: 0;
+    max-width: 100%;
   }
 `;
 
@@ -92,7 +93,7 @@ export const DetailsSalary = styled.p`
   margin-bottom: 37px;
 `;
 
-export const DetailsDescription = styled.div`
+export const DetailsDescription = styled.div<{ isBranded?: boolean }>`
   p {
     margin-bottom: 15px;
     line-height: 1.57;
@@ -103,17 +104,26 @@ export const DetailsDescription = styled.div`
     right: 100%;
     padding-right: 6px;
     content: '—';
+    position: absolute;
   }
 
   ul li p {
     margin: 0;
   }
 
-  li {
-    display: flex;
-    line-height: 1.57;
-    margin-bottom: 5px;
-  }
+  ${props =>
+    !props.isBranded &&
+    `
+
+    ul {
+      margin-left: 20px;
+    }
+    ul li {
+      position: relative;
+      line-height: 1.57;
+      margin-bottom: 5px;
+    }
+  `}
 `;
 
 export const Experience = styled.span`
@@ -121,4 +131,10 @@ export const Experience = styled.span`
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
+`;
+
+export const ExperienceRequire = styled.span`
+  @media screen and (max-width: 600px) {
+    display: block;
+  }
 `;

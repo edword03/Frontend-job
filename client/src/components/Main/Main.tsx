@@ -7,7 +7,7 @@ import { Main as MainBlock } from "./Main.styles";
 import { useQuery, DocumentNode } from "@apollo/client";
 import { IS_DETAIL_ID } from "../../schemas";
 import { vacancyIdVar, isVisibleVar } from "@cache/index";
-import { useMedia } from "../../hooks/useMedia";
+import { useMedia } from "@hooks/useMedia";
 
 interface IProps {
   jobs: Array<{ id: string }>;

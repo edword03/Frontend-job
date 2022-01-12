@@ -38,6 +38,7 @@ export const DETAILS_INFO = gql`
       id
       name
       description
+      branded_description
       salary {
         currency
         from

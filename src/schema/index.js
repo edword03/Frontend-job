@@ -48,6 +48,7 @@ const typeDefs = gql`
     schedule: Schedule
     employment: Employment
     description: String
+    branded_description: String
     key_skills: [KeySkills]
     employer: Employer
     created_at: String

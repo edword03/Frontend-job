@@ -35,6 +35,19 @@ export const InputContainer = styled.div<InputContainerProps>`
   }
 `;
 
+export const Input = styled.input`
+  border: none;
+  color: #49627e;
+  border-radius: 10px 0 0 10px;
+  height: 100%;
+  position: relative;
+  font-family: Montserrat;
+  font-weight: ${props => props.theme.bold};
+  font-size: 12px;
+  color: #49627e;
+  max-width: 95px;
+`;
+
 export const DropDown = styled.ul`
   background: #ffffff;
   border-radius: 0px 0px 10px 10px;

@@ -2,7 +2,6 @@ import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import {
   SearchBarWrap,
-  Input,
   SubmitButton,
   SalaryBlock,
   CityInputBlock,
@@ -14,7 +13,7 @@ import EmploymentIcon from '@assets/img/svg/employment.svg';
 import StarIcon from '@assets/img/svg/star.svg';
 import { queryParamsVar } from '@cache/index';
 import { Dropdown } from '@components/UI/Dropdown/Dropdown';
-import { DropDown, InputContainer } from '@styles/common';
+import { DropDown, Input, InputContainer } from '@styles/common';
 import { currency, employment, experience, scheduleOptions } from '@constants/index';
 import { useMedia } from '@hooks/useMedia';
 import { MobileDropDown } from '@components/UI/Dropdown/MobileDorpdown/MobileDropDown';
@@ -104,7 +103,10 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
     };
     console.log(body);
     queryParamsVar(body);
-    showDropDown()
+
+    if (!isDesktop) {
+      setIsVisivleDropdown(false)
+    }
     await refetch();
   };
 

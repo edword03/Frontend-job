@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { DropDown } from '@styles/common';
+import { DropDown, Input } from '@styles/common';
 import { employment, scheduleOptions, experience } from '@constants/index';
 import { useMedia } from '@hooks/useMedia';
 import { OptionSection } from './OptionSection';
@@ -14,12 +14,14 @@ const DropdownContainer = styled.div`
 
 const SalaryBlock = styled.div``;
 
-const SalaryMobile = styled.input`
+const SalaryMobile = styled(Input)`
   margin-top: 12px;
   display: block;
   border: 1px solid #9aaab5;
   border-radius: 5px;
   padding: 8px 12px;
+
+  max-width: 100%;
 `;
 
 interface MobileDropDownProps {
@@ -48,7 +50,10 @@ export const MobileDropDown: React.FC<MobileDropDownProps> = ({
               <span>Доход</span>
               <SalaryMobile
                 value={divideNumberByPieces(salary)}
-                onChange={e => onChangeSalary(e.target.value.replace(/\s+/g, '').replace(/[^0-9]/g, ''))}
+                onChange={e =>
+                  onChangeSalary(e.target.value.replace(/\s+/g, '').replace(/[^0-9]/g, ''))
+                }
+                maxLength={7}
               />
             </SalaryBlock>
           )}

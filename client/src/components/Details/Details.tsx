@@ -13,6 +13,7 @@ import {
   Delimetr,
   Experience,
   LogoSection,
+  ExperienceRequire,
 } from './Details.styles';
 import { Portal } from '@components/Portal';
 import { DETAILS_INFO } from '../../schemas';
@@ -34,7 +35,7 @@ export const Details = () => {
     variables: { id: details.data.vacancyId },
   });
 
-  const { isMobile } = useMedia();
+  const { isDesktop, isMobile } = useMedia();
 
   const salaryFrom = data && data.vacancyItem && data.vacancyItem.salary?.from;
   const salaryTo = data && data.vacancyItem && data.vacancyItem.salary?.to;
@@ -77,7 +78,7 @@ export const Details = () => {
   if (error) {
     return <h2>Ошибка запроса</h2>;
   }
-
+console.log(data.vacancyItem.branded_description);
   return (
     <Portal>
       <DetailsBlock>
@@ -95,9 +96,10 @@ export const Details = () => {
                 <DetailsSubtitle>{city}</DetailsSubtitle>
               </DetailsSubtitleBlock>
             </div>
+            {!isDesktop && !isMobile && <img src={CloseIcon} alt="close icon" onClick={closeDetail} />}
           </DetailsHeader>
           <Experience>
-            Требуемый опыт работы:
+            <ExperienceRequire>Требуемый опыт работы:</ExperienceRequire>
             {data &&
               data.vacancyItem &&
               data.vacancyItem.experience &&
@@ -106,7 +108,7 @@ export const Details = () => {
           <DetailsSalary>{totalSalary}</DetailsSalary>
         </DetailsHead>
         <DetailsDescription
-          dangerouslySetInnerHTML={{ __html: data.vacancyItem.description }}></DetailsDescription>
+          dangerouslySetInnerHTML={{ __html: data.vacancyItem.branded_description ? data.vacancyItem.branded_description : data.vacancyItem.description }} isBranded={!!data.vacancyItem.branded_description}></DetailsDescription>
       </DetailsBlock>
     </Portal>
   );

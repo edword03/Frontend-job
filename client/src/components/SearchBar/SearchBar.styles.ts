@@ -20,19 +20,6 @@ export const SearchBarWrap = styled.form`
   }
 `;
 
-export const Input = styled.input`
-  border: none;
-  color: #49627e;
-  border-radius: 10px 0 0 10px;
-  height: 100%;
-  position: relative;
-  font-family: Montserrat;
-  font-weight: ${props => props.theme.bold};
-  font-size: 12px;
-  color: #49627e;
-  max-width: 95px;
-`;
-
 export const SubmitButton = styled.button`
   max-width: 90px;
   width: 100%;
@@ -68,6 +55,12 @@ export const CityInputBlock = styled.div`
 
   & img {
     padding-right: 20px;
+  }
+
+  @media screen and (max-width: 600px) {
+    & img {
+      padding-right: 10px;
+    }
   }
 `;
 
