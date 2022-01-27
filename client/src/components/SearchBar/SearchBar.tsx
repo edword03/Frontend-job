@@ -7,17 +7,21 @@ import {
   CityInputBlock,
   Currency,
 } from './SearchBar.styles';
+import { DropDown, Input, InputContainer } from '@styles/common';
+
 import LocationIcon from '@assets/img/svg/Location.svg';
 import TimeIcon from '@assets/img/svg/Time-icon.svg';
 import EmploymentIcon from '@assets/img/svg/employment.svg';
 import StarIcon from '@assets/img/svg/star.svg';
+
 import { queryParamsVar } from '@cache/index';
 import { Dropdown } from '@components/UI/Dropdown/Dropdown';
-import { DropDown, Input, InputContainer } from '@styles/common';
 import { currency, employment, experience, scheduleOptions } from '@constants/index';
 import { useMedia } from '@hooks/useMedia';
 import { MobileDropDown } from '@components/UI/Dropdown/MobileDorpdown/MobileDropDown';
 import { divideNumberByPieces } from '@utils/index';
+import { useOutsideClick } from '@hooks/useOutsideClick';
+
 
 interface IProps {
   refetch: () => void;
@@ -47,7 +51,6 @@ const CIDY_ID = gql`
 `;
 
 export const SearchBar: React.FC<IProps> = ({ refetch }) => {
-  const [isVisivleDropdown, setIsVisivleDropdown] = React.useState<true | false>(false);
   const [isSearchList, setIsSearchList] = React.useState<true | false>(false);
   const [input, setInput] = React.useState('');
   const [scheduleId, setSchedule] = React.useState('');
@@ -58,6 +61,9 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
 
   const { isDesktop, isMobile } = useMedia();
 
+  const dropdownRef = React.useRef(null)
+  const {isVisible, setIsVisible} = useOutsideClick(dropdownRef)
+
   const { data } = useQuery<IDataTypes>(CIDY_ID, {
     variables: { city: input },
   });
@@ -67,7 +73,7 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
     data && data.cityId && data.cityId.items && data.cityId.items[0] && data.cityId.items[0].id;
 
   const showDropDown = () => {
-    setIsVisivleDropdown(prev => !prev);
+    setIsVisible(prev => !prev);
   };
 
   const onClickCityItem = (e: React.MouseEvent) => {
@@ -105,7 +111,7 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
     queryParamsVar(body);
 
     if (!isDesktop) {
-      setIsVisivleDropdown(false)
+      setIsVisible(false)
     }
     await refetch();
   };
@@ -166,10 +172,10 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
       )}
       {!isDesktop && (
         <>
-          <InputContainer border={!isMobile ? 'left' : undefined} onClick={showDropDown}>
+          <InputContainer border={!isMobile ? 'left' : undefined} onClick={showDropDown} ref={dropdownRef}>
             <span>Фильтры</span>
           </InputContainer>
-          {isVisivleDropdown && (
+          {isVisible && (
             <MobileDropDown
               onChangeEmployment={setEmployment}
               onChangeShedule={setSchedule}

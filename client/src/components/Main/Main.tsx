@@ -65,7 +65,6 @@ export const Main: React.FC<IProps> = ({
             </PaginationItems>
           )}
         </VacanciesBlock>
-        <div id="root-portal"></div>
         {isVisible && <Details />}
       </MainBlock>
     </>

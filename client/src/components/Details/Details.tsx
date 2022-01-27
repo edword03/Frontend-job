@@ -15,12 +15,12 @@ import {
   LogoSection,
   ExperienceRequire,
 } from './Details.styles';
-import { Portal } from '@components/Portal';
 import { DETAILS_INFO } from '../../schemas';
 import { Loader } from '..';
 import CloseIcon from '@assets/img/svg/close.svg';
 import { useMedia } from '@hooks/useMedia';
 import { isVisibleVar } from '@cache/index';
+import { DetailsInfoType, VacancyIdType } from '$types/detailsTypes';
 
 const GET_ID = gql`
   query Id {
@@ -28,11 +28,10 @@ const GET_ID = gql`
   }
 `;
 
-export const Details = () => {
-  console.log('details render');
-  const details = useQuery(GET_ID);
-  const { loading, error, data } = useQuery(DETAILS_INFO, {
-    variables: { id: details.data.vacancyId },
+export const Details = (): React.ReactElement => {
+  const details = useQuery<VacancyIdType>(GET_ID);
+  const { loading, error, data } = useQuery<DetailsInfoType>(DETAILS_INFO, {
+    variables: { id: details?.data?.vacancyId },
   });
 
   const { isDesktop, isMobile } = useMedia();
@@ -44,9 +43,9 @@ export const Details = () => {
 
   const totalSalary =
     data && data.vacancyItem.salary
-      ? (salaryFrom ? `от ${salaryFrom} ` : '') +
-        (salaryTo ? `до ${salaryTo}` : '') +
-        ` ${currencyFormat}`
+      ? `${salaryFrom ? `от ${salaryFrom}` : ''} ${
+          salaryTo ? `до ${salaryTo}` : ''
+        } ${currencyFormat}`
       : null;
 
   const logoSrc =
@@ -58,8 +57,7 @@ export const Details = () => {
 
   const city =
     data && data.vacancyItem && data.vacancyItem.address && data.vacancyItem.address.city;
-  const companyTitle =
-    data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name;
+  const companyTitle = data?.vacancyItem.employer.name;
 
   const closeDetail = () => {
     isVisibleVar(false);
@@ -67,49 +65,59 @@ export const Details = () => {
 
   if (loading) {
     return (
-      <Portal>
-        <DetailsBlock style={{width: '100%', height: '100%'}}>
-          <Loader />
-        </DetailsBlock>
-      </Portal>
+      <DetailsBlock>
+        <Loader />
+      </DetailsBlock>
     );
   }
 
   if (error) {
-    return <h2>Ошибка запроса</h2>;
-  }
-console.log(data.vacancyItem.branded_description);
-  return (
-    <Portal>
+    return (
       <DetailsBlock>
-        <DetailsHead>
-          <DetailsHeader>
-            <LogoSection>
-              {logoSrc && <HeadLogo src={logoSrc} />}
-              {isMobile && <img src={CloseIcon} alt="close icon" onClick={closeDetail} />}
-            </LogoSection>
-            <div style={{ marginRight: 'auto' }}>
-              <DetailsTitle>{data && data.vacancyItem.name}</DetailsTitle>
-              <DetailsSubtitleBlock>
-                <DetailsSubtitle>{companyTitle}</DetailsSubtitle>
-                {city && <Delimetr />}
-                <DetailsSubtitle>{city}</DetailsSubtitle>
-              </DetailsSubtitleBlock>
-            </div>
-            {!isDesktop && !isMobile && <img src={CloseIcon} alt="close icon" onClick={closeDetail} />}
-          </DetailsHeader>
-          <Experience>
-            <ExperienceRequire>Требуемый опыт работы:</ExperienceRequire>
-            {data &&
-              data.vacancyItem &&
-              data.vacancyItem.experience &&
-              data.vacancyItem.experience.name}
-          </Experience>
-          <DetailsSalary>{totalSalary}</DetailsSalary>
-        </DetailsHead>
-        <DetailsDescription
-          dangerouslySetInnerHTML={{ __html: data.vacancyItem.branded_description ? data.vacancyItem.branded_description : data.vacancyItem.description }} isBranded={!!data.vacancyItem.branded_description}></DetailsDescription>
+        <h2>Ошибка запроса</h2>
       </DetailsBlock>
-    </Portal>
+    );
+  }
+
+  return (
+    <DetailsBlock>
+      <DetailsHead>
+        <DetailsHeader>
+          <LogoSection>
+            {logoSrc && <HeadLogo src={logoSrc} />}
+            {isMobile && <img src={CloseIcon} alt="close icon" onClick={closeDetail} />}
+          </LogoSection>
+          <div style={{ marginRight: 'auto' }}>
+            <DetailsTitle>{data && data.vacancyItem.name}</DetailsTitle>
+            <DetailsSubtitleBlock>
+              <DetailsSubtitle data-testid="companyTitle">{companyTitle}</DetailsSubtitle>
+              {city && <Delimetr />}
+              <DetailsSubtitle>{city}</DetailsSubtitle>
+            </DetailsSubtitleBlock>
+          </div>
+          {!isDesktop && !isMobile && (
+            <img src={CloseIcon} alt="close icon" onClick={closeDetail} />
+          )}
+        </DetailsHeader>
+        <Experience>
+          <ExperienceRequire>Требуемый опыт работы:</ExperienceRequire>
+          {data &&
+            data.vacancyItem &&
+            data.vacancyItem.experience &&
+            data.vacancyItem.experience.name}
+        </Experience>
+        <DetailsSalary>{totalSalary}</DetailsSalary>
+      </DetailsHead>
+      <DetailsDescription
+        dangerouslySetInnerHTML={{
+          __html:
+            data && data.vacancyItem.branded_description
+              ? data.vacancyItem.branded_description
+              : data && data.vacancyItem.description
+              ? data.vacancyItem.description
+              : '',
+        }}
+        isBranded={data && !!data.vacancyItem.branded_description}></DetailsDescription>
+    </DetailsBlock>
   );
 };

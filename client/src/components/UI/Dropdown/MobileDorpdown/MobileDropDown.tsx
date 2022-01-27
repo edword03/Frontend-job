@@ -42,7 +42,7 @@ export const MobileDropDown: React.FC<MobileDropDownProps> = ({
   const { isMobile } = useMedia();
 
   return (
-    <DropDown>
+    <DropDown onClick={evt => evt.stopPropagation()}> 
       <DropdownContainer>
         <div>
           {isMobile && (

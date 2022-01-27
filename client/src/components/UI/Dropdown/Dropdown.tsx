@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { DropDown, InputContainer } from '@styles/common';
 import { OptionItem } from '../OptionItem';
+import { useOutsideClick } from '@hooks/index';
 
 interface IPropsTypes {
   imageSrc?: string;
@@ -8,39 +9,25 @@ interface IPropsTypes {
   onChangeStateValue: (id: string) => void;
 }
 
-export const Dropdown: React.FC<IPropsTypes> = ({ imageSrc, options, onChangeStateValue }) => {
-  const [isVisivleDropdown, setIsVisivleDropdown] = useState<true | false>(false);
+export const Dropdown: React.FC<IPropsTypes> = ({ imageSrc = '', options, onChangeStateValue }) => {
   const [titleSelect, setTitleSelect] = useState<string>(options[0].value);
 
-  const showDropDown = () => setIsVisivleDropdown(prev => !prev);
+  const inputRef = useRef<HTMLDivElement | null>(null);
+  const { isVisible, setIsVisible } = useOutsideClick(inputRef);
+
+  const showDropDown = () => setIsVisible(prev => !prev);
 
   const onChangeRadio = (evt: React.ChangeEvent<HTMLInputElement>) => {
     onChangeStateValue(evt.target.id);
     setTitleSelect(evt.target.value);
-    setIsVisivleDropdown(false);
+    setIsVisible(false);
   };
-
-  const inputRef = useRef<null | HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: any) => {
-      if (inputRef?.current && !inputRef?.current?.contains(e.target as Node)) {
-        setIsVisivleDropdown(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [isVisivleDropdown]);
 
   return (
     <InputContainer onClick={showDropDown} ref={inputRef}>
       <img src={imageSrc} alt="" />
       <span>{titleSelect}</span>
-      {isVisivleDropdown && (
+      {isVisible && (
         <DropDown onClick={e => e.stopPropagation()}>
           {options &&
             options.map(item => (

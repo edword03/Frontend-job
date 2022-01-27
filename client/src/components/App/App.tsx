@@ -3,19 +3,8 @@ import { Header, Container } from '@components/index';
 import { ThemeContext } from 'styled-components';
 import { GlobalStyle, Theme } from '@styles/style.d';
 import { FeaturedJobs, SearchJobs } from '@pages/index';
-import { gql } from '@apollo/client';
 
 type CurrenPageType = 'searchPage' | 'featuredPage';
-
-export const JOB_INFO = gql`
-  query Job {
-    getFetch {
-      items {
-        name
-      }
-    }
-  }
-`
 
 export const App = () => {
   const [currentPage, setCurrenPage] = React.useState<CurrenPageType>('searchPage');

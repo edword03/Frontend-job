@@ -17,6 +17,7 @@ export const DetailsBlock = styled.div`
     top: -8px;
     margin-left: 0;
     max-width: 100%;
+    height: 100%;
   }
 `;
 
