@@ -1,12 +1,11 @@
 import React from 'react';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import {
   DetailsBlock,
-  DetailsDescription,
   DetailsHead,
   DetailsSalary,
   DetailsTitle,
-  HeadLogo,
   DetailsHeader,
   DetailsSubtitle,
   DetailsSubtitleBlock,
@@ -21,6 +20,7 @@ import CloseIcon from '@assets/img/svg/close.svg';
 import { useMedia } from '@hooks/useMedia';
 import { isVisibleVar } from '@cache/index';
 import { DetailsInfoType, VacancyIdType } from '$types/detailsTypes';
+import { DetailsDescription, HeadLogo } from '@styles/common';
 
 const GET_ID = gql`
   query Id {
@@ -30,8 +30,12 @@ const GET_ID = gql`
 
 export const Details = (): React.ReactElement => {
   const details = useQuery<VacancyIdType>(GET_ID);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { search } = useLocation();
+
   const { loading, error, data } = useQuery<DetailsInfoType>(DETAILS_INFO, {
-    variables: { id: details?.data?.vacancyId },
+    variables: { id: details?.data?.vacancyId || id },
   });
 
   const { isDesktop, isMobile } = useMedia();
@@ -61,6 +65,7 @@ export const Details = (): React.ReactElement => {
 
   const closeDetail = () => {
     isVisibleVar(false);
+    navigate('/jobs' + search);
   };
 
   if (loading) {
@@ -89,8 +94,11 @@ export const Details = (): React.ReactElement => {
           </LogoSection>
           <div style={{ marginRight: 'auto' }}>
             <DetailsTitle>{data && data.vacancyItem.name}</DetailsTitle>
+
             <DetailsSubtitleBlock>
-              <DetailsSubtitle data-testid="companyTitle">{companyTitle}</DetailsSubtitle>
+              <Link to={`/companies/${data && data.vacancyItem.employer.id}`}>
+                <DetailsSubtitle data-testid="companyTitle">{companyTitle}</DetailsSubtitle>
+              </Link>
               {city && <Delimetr />}
               <DetailsSubtitle>{city}</DetailsSubtitle>
             </DetailsSubtitleBlock>

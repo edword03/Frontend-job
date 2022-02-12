@@ -129,6 +129,24 @@ const typeDefs = gql`
     items: [CityItems]
   }
 
+  type CompanyItemResponse {
+    id: ID
+    name: String
+    description: String
+    site_url: String
+    vacancies_url: String
+    logo_urls: LogoUrl
+    area: Area
+    branded_description: String
+    branding: Boolean
+    open_vacancies: Int
+  }
+
+  type CompaniesResponse {
+    name: String
+  }
+
+
   type Query {
     vacancies(
       city: String
@@ -141,6 +159,9 @@ const typeDefs = gql`
     ): JobsRes
     vacancyItem(id: ID): VacancyItem
     cityId(city: String): CityResponse
+    companyItem(id: ID): CompanyItemResponse
+    companies: CompaniesResponse
+    vacanciesCompany(id: ID): JobsRes
   }
 `;
 

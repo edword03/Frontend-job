@@ -1,4 +1,5 @@
 import { render, screen, RenderResult } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import { MockedProvider } from '@apollo/client/testing';
 import { DETAILS_INFO } from '../../schemas';
@@ -23,11 +24,13 @@ describe('testing <Details />', () => {
   let wrapper: RenderResult;
 
   beforeEach(
-    async() =>
+    async () =>
       (wrapper = await render(
-        <MockedProvider mocks={[mock]} addTypename={false}>
-          <Details />
-        </MockedProvider>,
+        <BrowserRouter>
+          <MockedProvider mocks={[mock]} addTypename={false}>
+            <Details />
+          </MockedProvider>
+        </BrowserRouter>,
       )),
   );
 
@@ -37,7 +40,7 @@ describe('testing <Details />', () => {
   });
 
   it('should have error', async () => {
-    await act(async() => await new Promise(resolve => setTimeout(resolve, 0)))
+    await act(async () => await new Promise(resolve => setTimeout(resolve, 0)));
 
     screen.debug();
     expect(await wrapper.findByText(/Ошибка запроса/i)).toBeTruthy();

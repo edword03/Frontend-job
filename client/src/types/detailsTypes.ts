@@ -11,6 +11,7 @@ export interface DetailsInfoType {
       gross: string;
     };
     employer: {
+      id: string;
       name: string;
       logo_urls: {
         original: string;

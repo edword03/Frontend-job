@@ -17,6 +17,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@types/react-router-dom": "^5.3.3",
     "apollo-datasource-rest": "^3.4.0",
     "apollo-server": "^3.6.1",
     "apollo-server-core": "^3.6.1",
@@ -24,7 +25,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^16.2.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "react-router-dom": "^6.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

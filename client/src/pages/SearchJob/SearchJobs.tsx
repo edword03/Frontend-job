@@ -1,14 +1,19 @@
-import React from 'react';
+import React, {useRef} from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { useQuery, useReactiveVar } from '@apollo/client';
-import { SearchBar } from '@components/index';
-import { Main } from '@components/Main/Main';
+import { Container, SearchBar } from '@components/index';
+import { Main } from '@components/index';
+import { serializeQuery, deserializeQuery } from '@utils/index';
 import { JOB_ITEMS } from '../../schemas';
 import { queryParamsVar } from '@cache/index';
 
 export const SearchJobs = () => {
-  const [page, setPage] = React.useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = React.useState(searchParams.get('page') || 0);
   const query = useReactiveVar(queryParamsVar);
-  console.log('query: ', query);
+  const { search } = useLocation();
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
   const { data, refetch } = useQuery(JOB_ITEMS, {
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -18,9 +23,13 @@ export const SearchJobs = () => {
       experience: query.experience,
       salary: query.salary,
       page: page.toLocaleString(),
-      currency: query.currency
+      currency: query.currency,
     },
   });
+
+  React.useEffect(() => {
+    setSearchParams(serializeQuery({ ...deserializeQuery(search), page }));
+  }, [page, search, setSearchParams, setPage]);
 
   const isVacancies = data && data.vacancies && data.vacancies.items.length > 0;
 
@@ -28,27 +37,34 @@ export const SearchJobs = () => {
 
   const increaseCurrentPage = React.useCallback(() => {
     if (page < 100) {
-      setPage(prevState => prevState + 1);
+      if(wrapperRef) {
+        wrapperRef?.current?.scrollIntoView()
+      }
+      setPage(prev => +prev + 1);
     }
   }, [page]);
 
-  const decreaseCurrentPage = React.useCallback(() => {
+  const decreaseCurrentPage = React.useCallback(async () => {
     if (page > 0) {
-      setPage(prevState => prevState - 1);
+      wrapperRef && wrapperRef?.current?.scrollIntoView()
+      setPage(prev => +prev - 1);
     }
   }, [page]);
 
   return (
     <>
-      <SearchBar refetch={refetch} />
-      <Main
-        jobs={jobs}
-        schema={JOB_ITEMS}
-        isVacancies={isVacancies}
-        nextPage={increaseCurrentPage}
-        prevPage={decreaseCurrentPage}
-        isPagination
-      />
+      <Container>
+        <SearchBar refetch={refetch} />
+        <Main
+          jobs={jobs}
+          schema={JOB_ITEMS}
+          isVacancies={isVacancies}
+          nextPage={increaseCurrentPage}
+          prevPage={decreaseCurrentPage}
+          isPagination
+          ref={wrapperRef}
+        />
+      </Container>
     </>
   );
 };
