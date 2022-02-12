@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import {
   SearchBarWrap,
   SubmitButton,
@@ -13,15 +14,15 @@ import LocationIcon from '@assets/img/svg/Location.svg';
 import TimeIcon from '@assets/img/svg/Time-icon.svg';
 import EmploymentIcon from '@assets/img/svg/employment.svg';
 import StarIcon from '@assets/img/svg/star.svg';
+import SalaryIcon from '@assets/img/svg/salary.svg';
 
 import { queryParamsVar } from '@cache/index';
 import { Dropdown } from '@components/UI/Dropdown/Dropdown';
 import { currency, employment, experience, scheduleOptions } from '@constants/index';
 import { useMedia } from '@hooks/useMedia';
 import { MobileDropDown } from '@components/UI/Dropdown/MobileDorpdown/MobileDropDown';
-import { divideNumberByPieces } from '@utils/index';
+import { divideNumberByPieces, serializeQuery, deserializeQuery } from '@utils/index';
 import { useOutsideClick } from '@hooks/useOutsideClick';
-
 
 interface IProps {
   refetch: () => void;
@@ -52,22 +53,43 @@ const CIDY_ID = gql`
 
 export const SearchBar: React.FC<IProps> = ({ refetch }) => {
   const [isSearchList, setIsSearchList] = React.useState<true | false>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { search } = useLocation();
+
   const [input, setInput] = React.useState('');
-  const [scheduleId, setSchedule] = React.useState('');
-  const [employmentId, setEmployment] = React.useState('');
-  const [experienceId, setExperience] = React.useState('');
-  const [salary, setSalary] = React.useState<string>('');
+  const [scheduleId, setSchedule] = React.useState(searchParams.get('schedule') || '');
+  const [employmentId, setEmployment] = React.useState(searchParams.get('employment') || '');
+  const [experienceId, setExperience] = React.useState(searchParams.get('experience') || '');
+  const [salary, setSalary] = React.useState<string>(searchParams.get('salary') || '');
   const [currencyCode, setCurrencyCode] = React.useState('RUR');
 
   const { isDesktop, isMobile } = useMedia();
 
-  const dropdownRef = React.useRef(null)
-  const {isVisible, setIsVisible} = useOutsideClick(dropdownRef)
+  const dropdownRef = React.useRef(null);
+  const { isVisible, setIsVisible } = useOutsideClick(dropdownRef);
 
   const { data } = useQuery<IDataTypes>(CIDY_ID, {
     variables: { city: input },
   });
-  const [cityId, setCityId] = React.useState('');
+
+  const [cityId, setCityId] = React.useState(searchParams.get('area') || '');
+
+  React.useEffect(() => {
+    async function updateQuery() {
+      const body = {
+        city: cityId,
+        schedule: scheduleId,
+        employment: employmentId,
+        experience: experienceId,
+        salary,
+        currency: currencyCode,
+      };
+      queryParamsVar(body);
+      await refetch();
+    }
+    updateQuery()
+  }, []);
+
 
   const cityItemId =
     data && data.cityId && data.cityId.items && data.cityId.items[0] && data.cityId.items[0].id;
@@ -76,26 +98,48 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
     setIsVisible(prev => !prev);
   };
 
+  const serializeQueryCity = React.useMemo(() => {
+    return serializeQuery({...deserializeQuery(search), area: cityItemId})
+  }, [cityItemId, search])
+
   const onClickCityItem = (e: React.MouseEvent) => {
     if (e.currentTarget.textContent) {
       setInput(e.currentTarget.textContent);
-      setIsSearchList(false)
+      setIsSearchList(false);
+      setSearchParams(serializeQueryCity);
     }
   };
 
-  const onChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value.trim());
-    if (e.target.value.length > 2) {
-      setIsSearchList(true);
-      if (cityItemId) {
-        setCityId(cityItemId);
+  const onChangeCity = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInput(e.target.value.trim());
+      if (e.target.value.length > 2) {
+        setIsSearchList(true);
+        if (cityItemId) {
+          setTimeout(() => {
+            setCityId(cityItemId);
+            setSearchParams(serializeQueryCity);
+          }, 1000);
+        } else {
+          setCityId('');
+        }
       } else {
-        setCityId('');
+        setIsSearchList(false);
       }
-    } else {
-      setIsSearchList(false);
-    }
-  };
+    },
+    [cityItemId, setSearchParams, serializeQueryCity],
+  );
+
+  const onChangeSalary = React.useCallback(
+    (evt: React.ChangeEvent<HTMLInputElement>) => {
+      if (parseInt(evt.target.value) > 0) {
+        setSalary(evt.target.value.replace(/\s+/g, '').replace(/[^0-9]/g, ''));
+        let params = deserializeQuery(search);
+        setSearchParams(serializeQuery({ ...params, salary: salary }));
+      }
+    },
+    [salary, setSearchParams, search],
+  );
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,10 +152,10 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
       currency: currencyCode,
     };
     console.log(body);
-    queryParamsVar(body);
+    await queryParamsVar(body);
 
     if (!isDesktop) {
-      setIsVisible(false)
+      setIsVisible(false);
     }
     await refetch();
   };
@@ -140,21 +184,28 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
             imageSrc={TimeIcon}
             options={scheduleOptions}
             onChangeStateValue={setSchedule}
+            queryParam="schedule"
           />
           <Dropdown
             imageSrc={EmploymentIcon}
             options={employment}
             onChangeStateValue={setEmployment}
+            queryParam="employment"
           />
-          <Dropdown imageSrc={StarIcon} options={experience} onChangeStateValue={setExperience} />
+          <Dropdown
+            imageSrc={StarIcon}
+            options={experience}
+            onChangeStateValue={setExperience}
+            queryParam="experience"
+          />
         </>
       )}
       {!isMobile && (
         <SalaryBlock>
-          <img src={LocationIcon} alt="" />
+          <img src={SalaryIcon} alt="" />
           <Input
             value={divideNumberByPieces(salary)}
-            onChange={e => setSalary(e.target.value.replace(/\s+/g, '').replace(/[^0-9]/g, ''))}
+            onChange={onChangeSalary}
             autoComplete="none"
             type="text"
             maxLength={7}
@@ -172,7 +223,10 @@ export const SearchBar: React.FC<IProps> = ({ refetch }) => {
       )}
       {!isDesktop && (
         <>
-          <InputContainer border={!isMobile ? 'left' : undefined} onClick={showDropDown} ref={dropdownRef}>
+          <InputContainer
+            border={!isMobile ? 'left' : undefined}
+            onClick={showDropDown}
+            ref={dropdownRef}>
             <span>Фильтры</span>
           </InputContainer>
           {isVisible && (

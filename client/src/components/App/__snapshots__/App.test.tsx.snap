@@ -29,15 +29,17 @@ Object {
               </span>
             </a>
             <nav
-              class="sc-jRQBWg hFjvtQ"
+              class="sc-jRQBWg ErfWM"
             >
               <a
-                class="sc-gKclnd jcVFjf"
+                class="sc-gKclnd yRrXg"
+                href="/jobs"
               >
                 Поиск вакансий
               </a>
               <a
-                class="sc-gKclnd fHqCml"
+                class="sc-gKclnd yRrXg"
+                href="/featured-jobs"
               >
                 Избранные вакансии
               </a>
@@ -46,102 +48,47 @@ Object {
         </div>
       </header>
       <div
+        class="sc-gSQFLo ldXnKf"
+      >
+        <div>
+          <h1
+            class="sc-lbhJGD WpgHf"
+          >
+            Найди работу мечты
+          </h1>
+          <h2
+            class="sc-iNGGcK gfoJkK"
+          >
+             вакансий доступны прямо сейчас
+          </h2>
+        </div>
+      </div>
+      <div
         class="sc-bdvvtL idGvU"
       >
-        <form
-          class="sc-jrQzAO cLUyZt"
+        <section
+          class="sc-jeraig dGkmgx"
         >
-          <div
-            class="sc-iqseJM FzOYc"
+          <h3
+            class="sc-eJwWfJ hQEHvZ"
           >
-            <img
-              alt=""
-              src="Location.svg"
-            />
-            <input
-              class="sc-ksdxgE gzLXLg"
-              placeholder="Поиск города"
-              value=""
-            />
-          </div>
+            Недавние вакансии:
+          </h3>
+          <div />
           <div
-            class="sc-crHmcD iokkZh"
+            class="sc-nVkyK jQkhhM"
           >
-            <img
-              alt=""
-              src="Location.svg"
-            />
-            <input
-              autocomplete="none"
-              class="sc-ksdxgE gzLXLg"
-              maxlength="7"
-              type="text"
-              value=""
-            />
-            <label
-              style="position: absolute; left: 118px;"
+            <a
+              href="/jobs"
             >
-              <select
-                class="sc-egiyK nnLNT"
+              <button
+                class="sc-ieecCq gqxRky"
               >
-                <option
-                  value="RUR"
-                >
-                  руб.
-                </option>
-                <option
-                  value="EUR"
-                >
-                  EUR
-                </option>
-                <option
-                  value="USD"
-                >
-                  USD
-                </option>
-                <option
-                  value="BYR"
-                >
-                  бел. руб.
-                </option>
-                <option
-                  value="KZT"
-                >
-                  KZT
-                </option>
-                <option
-                  value="UAH"
-                >
-                  грн.
-                </option>
-              </select>
-            </label>
+                Посмотреть все
+              </button>
+            </a>
           </div>
-          <div
-            class="sc-bqiRlB jBKERV"
-          >
-            <span>
-              Фильтры
-            </span>
-          </div>
-          <button
-            class="sc-kDTinF hyOlsW"
-          >
-            Поиск
-          </button>
-        </form>
-        <div
-          class="sc-khQegj dRgOqI"
-        >
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </div>
+        </section>
       </div>
     </div>
   </body>,
@@ -170,15 +117,17 @@ Object {
             </span>
           </a>
           <nav
-            class="sc-jRQBWg hFjvtQ"
+            class="sc-jRQBWg ErfWM"
           >
             <a
-              class="sc-gKclnd jcVFjf"
+              class="sc-gKclnd yRrXg"
+              href="/jobs"
             >
               Поиск вакансий
             </a>
             <a
-              class="sc-gKclnd fHqCml"
+              class="sc-gKclnd yRrXg"
+              href="/featured-jobs"
             >
               Избранные вакансии
             </a>
@@ -187,102 +136,47 @@ Object {
       </div>
     </header>
     <div
+      class="sc-gSQFLo ldXnKf"
+    >
+      <div>
+        <h1
+          class="sc-lbhJGD WpgHf"
+        >
+          Найди работу мечты
+        </h1>
+        <h2
+          class="sc-iNGGcK gfoJkK"
+        >
+           вакансий доступны прямо сейчас
+        </h2>
+      </div>
+    </div>
+    <div
       class="sc-bdvvtL idGvU"
     >
-      <form
-        class="sc-jrQzAO cLUyZt"
+      <section
+        class="sc-jeraig dGkmgx"
       >
-        <div
-          class="sc-iqseJM FzOYc"
+        <h3
+          class="sc-eJwWfJ hQEHvZ"
         >
-          <img
-            alt=""
-            src="Location.svg"
-          />
-          <input
-            class="sc-ksdxgE gzLXLg"
-            placeholder="Поиск города"
-            value=""
-          />
-        </div>
+          Недавние вакансии:
+        </h3>
+        <div />
         <div
-          class="sc-crHmcD iokkZh"
+          class="sc-nVkyK jQkhhM"
         >
-          <img
-            alt=""
-            src="Location.svg"
-          />
-          <input
-            autocomplete="none"
-            class="sc-ksdxgE gzLXLg"
-            maxlength="7"
-            type="text"
-            value=""
-          />
-          <label
-            style="position: absolute; left: 118px;"
+          <a
+            href="/jobs"
           >
-            <select
-              class="sc-egiyK nnLNT"
+            <button
+              class="sc-ieecCq gqxRky"
             >
-              <option
-                value="RUR"
-              >
-                руб.
-              </option>
-              <option
-                value="EUR"
-              >
-                EUR
-              </option>
-              <option
-                value="USD"
-              >
-                USD
-              </option>
-              <option
-                value="BYR"
-              >
-                бел. руб.
-              </option>
-              <option
-                value="KZT"
-              >
-                KZT
-              </option>
-              <option
-                value="UAH"
-              >
-                грн.
-              </option>
-            </select>
-          </label>
+              Посмотреть все
+            </button>
+          </a>
         </div>
-        <div
-          class="sc-bqiRlB jBKERV"
-        >
-          <span>
-            Фильтры
-          </span>
-        </div>
-        <button
-          class="sc-kDTinF hyOlsW"
-        >
-          Поиск
-        </button>
-      </form>
-      <div
-        class="sc-khQegj dRgOqI"
-      >
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
+      </section>
     </div>
   </div>,
   "debug": [Function],

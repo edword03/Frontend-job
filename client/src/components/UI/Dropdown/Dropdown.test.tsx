@@ -1,4 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { Dropdown } from './Dropdown';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
@@ -26,7 +27,7 @@ describe('testing <Dropdown />', () => {
 
   it('should render Dropdown', () => {
     const { getByText } = render(
-      <Dropdown onChangeStateValue={onChange} options={options} />,
+      <BrowserRouter><Dropdown queryParam="schedule" onChangeStateValue={onChange} options={options} /></BrowserRouter>,
     );
 
     expect(getByText(/Полная занятость/i)).toBeTruthy();
@@ -34,11 +35,13 @@ describe('testing <Dropdown />', () => {
 
   it('should open dropdown list', () => {
     const { getByRole, getByText } = render(
-      <Dropdown onChangeStateValue={onChange} options={options} />,
+      <BrowserRouter>
+        <Dropdown queryParam="schedule" onChangeStateValue={onChange} options={options} />
+      </BrowserRouter>,
     );
     act(() => userEvent.click(getByText(/Полная занятость/i)));
 
-    const optionList = screen.getByRole('list')
+    const optionList = screen.getByRole('list');
 
     expect(optionList).toBeInTheDocument();
     screen.debug(getByRole('list'));

@@ -7,8 +7,24 @@ export const IS_DETAIL_ID = gql`
 `;
 
 export const JOB_ITEMS = gql`
-  query Job($city: String, $page: String, $schedule: String, $employment: String, $experience: String, $salary: String, $currency: String) {
-    vacancies(city: $city, page: $page, schedule: $schedule, employment: $employment, experience: $experience, salary: $salary, currency: $currency) {
+  query Job(
+    $city: String
+    $page: String
+    $schedule: String
+    $employment: String
+    $experience: String
+    $salary: String
+    $currency: String
+  ) {
+    vacancies(
+      city: $city
+      page: $page
+      schedule: $schedule
+      employment: $employment
+      experience: $experience
+      salary: $salary
+      currency: $currency
+    ) {
       items {
         name
         employer {
@@ -28,9 +44,11 @@ export const JOB_ITEMS = gql`
         }
       }
       pages
+      found
     }
   }
 `;
+
 
 export const DETAILS_INFO = gql`
   query Item($id: ID) {
@@ -47,6 +65,7 @@ export const DETAILS_INFO = gql`
       }
       employer {
         name
+        id
         logo_urls {
           original
           _90
@@ -59,6 +78,40 @@ export const DETAILS_INFO = gql`
       address {
         city
       }
+      created_at
+      key_skills {
+        name
+      }
+    }
+  }
+`;
+
+export const CompanyItem = gql`
+  query Company($id: ID) {
+    companyItem(id: $id) {
+      name
+      description
+      branded_description
+      area {
+        name
+      }
+      logo_urls {
+        original
+        _90
+      }
+      vacancies_url
+    }
+  }
+`;
+
+export const VACANCIES_COMPANY = gql`
+  query VacanciesCompany($id: ID) {
+    vacanciesCompany(id: $id) {
+      items {
+        id
+      }
+      pages
+      found
     }
   }
 `;

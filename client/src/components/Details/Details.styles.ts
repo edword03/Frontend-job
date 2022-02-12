@@ -8,6 +8,7 @@ export const DetailsBlock = styled.div`
   max-width: 660px;
   width: 100%;
   margin-left: 40px;
+  margin-bottom: 30px;
 
   @media screen and (max-width: 1024px) {
     position: absolute;
@@ -17,7 +18,6 @@ export const DetailsBlock = styled.div`
     top: -8px;
     margin-left: 0;
     max-width: 100%;
-    height: 100%;
   }
 `;
 
@@ -26,16 +26,6 @@ export const DetailsHead = styled.div`
   margin-bottom: 30px;
 `;
 
-export const HeadLogo = styled.img`
-  border-radius: 20px;
-  max-width: 130px;
-  height: auto;
-  margin-right: 20px;
-
-  @media screen and (max-width: 600px) {
-    margin-bottom: 15px;
-  }
-`;
 
 export const LogoSection = styled.div`
   @media screen and (max-width: 600px) {
@@ -85,6 +75,10 @@ export const DetailsSubtitle = styled.p`
   font-size: 10px;
   line-height: 12px;
   color: #9aaab5;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const DetailsSalary = styled.p`
@@ -94,38 +88,6 @@ export const DetailsSalary = styled.p`
   margin-bottom: 37px;
 `;
 
-export const DetailsDescription = styled.div<{ isBranded?: boolean }>`
-  p {
-    margin-bottom: 15px;
-    line-height: 1.57;
-  }
-
-  ul > li:before {
-    display: block;
-    right: 100%;
-    padding-right: 6px;
-    content: '—';
-    position: absolute;
-  }
-
-  ul li p {
-    margin: 0;
-  }
-
-  ${props =>
-    !props.isBranded &&
-    `
-
-    ul {
-      margin-left: 20px;
-    }
-    ul li {
-      position: relative;
-      line-height: 1.57;
-      margin-bottom: 5px;
-    }
-  `}
-`;
 
 export const Experience = styled.span`
   color: #9aaab5;

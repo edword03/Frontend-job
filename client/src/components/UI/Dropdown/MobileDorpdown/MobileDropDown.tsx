@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { DropDown, Input } from '@styles/common';
+import { useSearchParams } from 'react-router-dom';
+import { Button, DropDown, Input } from '@styles/common';
 import { employment, scheduleOptions, experience } from '@constants/index';
 import { useMedia } from '@hooks/useMedia';
 import { OptionSection } from './OptionSection';
@@ -40,6 +41,11 @@ export const MobileDropDown: React.FC<MobileDropDownProps> = ({
   onChangeSalary,
 }) => {
   const { isMobile } = useMedia();
+  const [, setParams] = useSearchParams()
+
+  const resetParams = (e: React.FormEvent) => {
+    setParams('')
+  }
 
   return (
     <DropDown onClick={evt => evt.stopPropagation()}> 
@@ -61,17 +67,21 @@ export const MobileDropDown: React.FC<MobileDropDownProps> = ({
             options={scheduleOptions}
             onChange={onChangeShedule}
             optionTitle="График работы"
+            queryParam='schedule'
           />
           <OptionSection
             options={employment}
             onChange={onChangeEmployment}
             optionTitle="Тип занятости"
+            queryParam='employment'
           />
           <OptionSection
             options={experience}
             onChange={onChangeExperience}
             optionTitle="Опыт работы"
+            queryParam='experience'
           />
+        <Button outlined style={{marginTop: '20px'}} onClick={resetParams}>Сбросить фильтр</Button>
         </div>
       </DropdownContainer>
     </DropDown>

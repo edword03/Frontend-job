@@ -19,12 +19,6 @@ export class Vacancies extends RESTDataSource {
       text: 'frontend',
       page: page || '0',
       per_page: '50',
-      // [salary && salary]: salary,
-      // [experience && experience]: experience
-      // schedule: schedule,
-      // employment: employment,
-      // experience: experience,
-      // salary: salary,
     };
 
     if (salary) {
@@ -52,7 +46,6 @@ export class Vacancies extends RESTDataSource {
       options.currency = currency
     }
 
-    console.log(options);
     return await this.get(`vacancies`, options);
   }
 
@@ -62,5 +55,17 @@ export class Vacancies extends RESTDataSource {
 
   async getCityId(name = 'Москва') {
     return await this.get(`suggests/areas?text=${name}`);
+  }
+
+  async getCompanies() {
+    return await this.get(`employers`)
+  }
+
+  async getCompanyItem(id) {
+    return await this.get(`employers/${id}`)
+  }
+
+  async getVacanciesCompany(id) {
+    return await this.get(`vacancies?employer_id=${id}&per_page=50`)
   }
 }

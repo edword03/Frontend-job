@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {Link} from 'react-router-dom'
 
 export const HeaderBlock = styled.header`
   position: fixed;
@@ -39,10 +40,7 @@ export const Nav = styled.nav<NavProp>`
   margin-left: auto;
   display: flex;
   align-items: center;
-
   justify-content: space-around;
-  max-width: 380px;
-  flex: 1;
 
   @media screen and (max-width: 600px) {
     position: absolute;
@@ -61,14 +59,15 @@ export const Nav = styled.nav<NavProp>`
 `;
 
 interface INavItem {
-  currentPage?: boolean | undefined
+  $current?: boolean
 }
 
-export const NavItem = styled.a<INavItem>`
+export const NavItem = styled(Link)<INavItem>`
   font-size: ${props => props.theme.defaultFontSize};
   font-weight: ${props => props.theme.bold};
   line-height: 17px;
-  color: ${props => props.currentPage ? props.theme.secondary : props.theme.defaultColor};
+  color: ${props => props.$current ? props.theme.secondary : props.theme.defaultColor};
+  padding: 0 12px 0;
 `;
 
 export const MobileMenu = styled.div`

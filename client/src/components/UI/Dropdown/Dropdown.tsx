@@ -1,16 +1,27 @@
 import React, { useState, useRef } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { DropDown, InputContainer } from '@styles/common';
+import { serializeQuery, deserializeQuery } from '@utils/index';
 import { OptionItem } from '../OptionItem';
 import { useOutsideClick } from '@hooks/index';
 
 interface IPropsTypes {
   imageSrc?: string;
   options: Array<{ id: string; value: string }>;
+  queryParam: string;
   onChangeStateValue: (id: string) => void;
 }
 
-export const Dropdown: React.FC<IPropsTypes> = ({ imageSrc = '', options, onChangeStateValue }) => {
-  const [titleSelect, setTitleSelect] = useState<string>(options[0].value);
+export const Dropdown: React.FC<IPropsTypes> = ({
+  imageSrc = '',
+  options,
+  onChangeStateValue,
+  queryParam = '',
+}) => {
+  const [param, setParams] = useSearchParams();
+  const title = options.find(item => item.id === param.get(queryParam));
+  const { search } = useLocation();
+  const [titleSelect, setTitleSelect] = useState<string>(title?.value || options[0].value);
 
   const inputRef = useRef<HTMLDivElement | null>(null);
   const { isVisible, setIsVisible } = useOutsideClick(inputRef);
@@ -19,6 +30,12 @@ export const Dropdown: React.FC<IPropsTypes> = ({ imageSrc = '', options, onChan
 
   const onChangeRadio = (evt: React.ChangeEvent<HTMLInputElement>) => {
     onChangeStateValue(evt.target.id);
+
+    let param = deserializeQuery(search);
+
+    const serializeParam = serializeQuery({ ...param, [queryParam]: evt.target.id });
+    setParams(serializeParam);
+
     setTitleSelect(evt.target.value);
     setIsVisible(false);
   };

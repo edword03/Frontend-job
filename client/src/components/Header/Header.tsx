@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
+import { Link, useLocation, useMatch } from 'react-router-dom';
 import { Container } from '@components/UI/Container';
 import {
   HeaderBlock,
@@ -13,18 +14,12 @@ import {
 } from './Header.styles';
 import { useMedia, useOutsideClick } from '@hooks/index';
 
-interface HeaderProps {
-  currentPage: string;
-  setSearchPage: () => void;
-  setFeaturedPage: () => void;
-}
-
-type linkActiveType = 'searchPage' | 'featuredPage' | undefined;
-
-export const Header: React.FC<HeaderProps> = ({ currentPage, setSearchPage, setFeaturedPage }) => {
-  const [linkActive, setLinkActive] = useState<linkActiveType>('searchPage');
-
+export const Header = () => {
   const { isMobile } = useMedia();
+  const { pathname } = useLocation();
+  const jobsMatch = useMatch('/jobs/*')
+  const featureJobsMatch = useMatch('/featured-jobs/*')
+  
   const mobileRef = useRef<HTMLDivElement | null>(null);
 
   const { isVisible, setIsVisible } = useOutsideClick(mobileRef);
@@ -33,31 +28,22 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setSearchPage, setF
     setIsVisible(prev => !prev);
   };
 
-  const toggleLinkOnSearchPage = () => {
-    setSearchPage();
-    setLinkActive('searchPage');
-  };
-
-  const toggleLinkOnFeaturedPage = () => {
-    setFeaturedPage();
-    setLinkActive('featuredPage');
-  };
-
   return (
     <HeaderBlock>
       <Container>
         <Menu>
-          <a href="/">
+          <Link to='/'>
             <Logo>
               Frontend <SubLogo>Job</SubLogo>
             </Logo>
-          </a>
+          </Link>
 
           <Nav isActive={isVisible}>
-            <NavItem currentPage={linkActive === 'searchPage'} onClick={toggleLinkOnSearchPage}>
+            <NavItem to="/jobs" $current={pathname === jobsMatch?.pathname}>
               Поиск вакансий
             </NavItem>
-            <NavItem currentPage={linkActive === 'featuredPage'} onClick={toggleLinkOnFeaturedPage}>
+
+            <NavItem to="/featured-jobs" $current={pathname === featureJobsMatch?.pathname}>
               Избранные вакансии
             </NavItem>
           </Nav>

@@ -1,50 +1,33 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   VacancyItem,
   ItemContentBlock,
   ItemSubtitle,
   ItemTitle,
   CompanyLogo,
-  EmptyLogo,
   KeySkillsItem,
   KeySkills,
   VacancyFlagActive,
   LikeIcon as LikeIconBlock,
   DateCreate,
   LogoSection,
-} from './Main.styles';
+} from './VacancyItem.styles';
 import { LikeIcon } from '@components/UI/LikeIcon';
 import { gql, useQuery } from '@apollo/client';
 import { favoriteVacanciesVar, isVisibleVar, vacancyIdVar } from '@cache/index';
 import { Loader } from '..';
 import { useMedia } from '@hooks/useMedia';
+import { EmptyLogo } from '@styles/common';
+import { DETAILS_INFO } from '../../schemas';
 
 interface IItemProps {
   id: string;
+  isHasActive?: boolean;
+  path?: string;
+  isCompanyVacancy?: boolean;
 }
 
-const VACANCY_ITEM = gql`
-  query Item($id: ID) {
-    vacancyItem(id: $id) {
-      name
-      key_skills {
-        name
-      }
-      employer {
-        name
-        logo_urls {
-          original
-          _90
-          _240
-        }
-      }
-      address {
-        city
-      }
-      created_at
-    }
-  }
-`;
 
 const VACANCY_ID = gql`
   query ItemId {
@@ -52,12 +35,19 @@ const VACANCY_ID = gql`
   }
 `;
 
-export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
-  const { data, loading } = useQuery(VACANCY_ITEM, {
+export const VacancyItemComponent: React.FC<IItemProps> = ({
+  id,
+  isHasActive,
+  path,
+  isCompanyVacancy,
+}) => {
+  const { data, loading } = useQuery(DETAILS_INFO, {
     variables: { id },
   });
+  
   const [isActive, setIsActive] = React.useState(false);
   const [isLiked, setIsLiked] = React.useState(false);
+  const { search } = useLocation();
 
   const idItem = useQuery(VACANCY_ID);
   const dateCreated = data && data.vacancyItem && data.vacancyItem.created_at;
@@ -67,15 +57,24 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
 
   const logo =
     data &&
-    data.vacancyItem &&
     data.vacancyItem.employer &&
     data.vacancyItem.employer.logo_urls &&
     data.vacancyItem.employer.logo_urls.original;
-  const companyName =
-    data && data.vacancyItem && data.vacancyItem.employer && data.vacancyItem.employer.name;
+
+  const companyName = data && data.vacancyItem && data.vacancyItem.employer.name;
   const title = data && data.vacancyItem && data.vacancyItem.name;
   const city =
     data && data.vacancyItem && data.vacancyItem.address && data.vacancyItem.address.city;
+
+  const isFavorite = React.useMemo(() => favoriteVacanciesVar().some(item => item.id === id), [id]);
+
+  const pathTo = `${path ? path : ''}${id}${search ? search : ''}`;
+
+  const keySkils =
+    data &&
+    data.vacancyItem.key_skills.map((item: any) => (
+      <KeySkillsItem key={Math.random() * 255}>{item.name}</KeySkillsItem>
+    ));
 
   React.useEffect(() => {
     if (idItem.data.vacancyId === id) {
@@ -84,21 +83,26 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
       setIsActive(false);
     }
 
-    if (favoriteVacanciesVar().some(item => item.id === id)) {
+    if (isFavorite) {
       setIsLiked(true);
     }
 
     return () => {
       setIsActive(false);
     };
-  }, [id, idItem.data.vacancyId]);
+  }, [id, idItem.data.vacancyId, isFavorite]);
 
-  const onDetailsInfo = () => {
+  const onDetailsInfo = React.useCallback(() => {
     isVisibleVar(true);
     vacancyIdVar(id);
+  }, [id]);
+
+  const stopEvent = (evt: React.MouseEvent) => {
+    evt.preventDefault();
+    evt.stopPropagation();
   };
 
-  const onToggleLike = () => {
+  const onToggleLike = React.useCallback(() => {
     setIsLiked(prevState => !prevState);
     const isFavorite = favoriteVacanciesVar().some(item => item.id === id);
 
@@ -107,7 +111,7 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
     } else {
       favoriteVacanciesVar([...favoriteVacanciesVar()].filter(item => item.id !== id));
     }
-  };
+  }, [id]);
 
   if (loading)
     return (
@@ -119,31 +123,28 @@ export const VacancyItemComponent: React.FC<IItemProps> = ({ id }) => {
 
   return (
     <>
-      <VacancyItem id={`item-${id}`} onClick={onDetailsInfo}>
-        {isActive && isDesktop && <VacancyFlagActive />}
+      <VacancyItem onClick={onDetailsInfo} to={pathTo} $isCompanyVacancy={isCompanyVacancy}>
+        {isActive && isDesktop && isHasActive && <VacancyFlagActive />}
+
         <ItemContentBlock>
           <LogoSection>
             {logo ? <CompanyLogo src={logo} alt="logo" /> : <EmptyLogo />}
             {isMobile && (
-              <div onClick={e => e.stopPropagation()}>
+              <div onClick={stopEvent}>
                 <LikeIcon isActive={isLiked} onToggle={onToggleLike} />
               </div>
             )}
           </LogoSection>
+
           <div style={{ maxWidth: 290 }}>
             <ItemSubtitle>{companyName}</ItemSubtitle>
             <ItemTitle>{title}</ItemTitle>
             <ItemSubtitle>{city}</ItemSubtitle>
-
-            <KeySkills>
-              {data &&
-                data.vacancyItem.key_skills.map((item: any) => (
-                  <KeySkillsItem key={Math.random() * 255}>{item.name}</KeySkillsItem>
-                ))}
-            </KeySkills>
+            <KeySkills>{keySkils}</KeySkills>
           </div>
+
           {!isMobile && (
-            <LikeIconBlock onClick={e => e.stopPropagation()}>
+            <LikeIconBlock onClick={stopEvent}>
               <div>
                 <LikeIcon isActive={isLiked} onToggle={onToggleLike} />
               </div>

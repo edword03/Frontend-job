@@ -15,11 +15,13 @@
     "@types/node": "^12.20.16",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.19",
     "graphql": "^15.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-responsive": "^9.0.0-beta.5",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "react-test-renderer": "^17.0.2",
     "styled-components": "^5.3.3",
@@ -28,7 +30,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "craco start",
+    "start:development": "craco start --mode='development'",
+    "start:production": "craco start",
     "build": "craco build",
     "test": "craco test",
     "test:coverage": "craco test --coverage",
