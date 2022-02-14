@@ -27,8 +27,10 @@ const startServer = async () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
 
-  app.use(cors());
-  app.use(express.static(__dirname + '/client/build'));
+  const buildPath = __dirname + '/client/build';
+
+  app.use(express.static(buildPath));
+  app.use('*', express.static(buildPath));
 
   server.applyMiddleware({ app });
 
